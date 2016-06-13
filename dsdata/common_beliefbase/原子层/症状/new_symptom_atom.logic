@@ -1,0 +1,44 @@
+
+//测试使用
+
+#complained段落Symptom: !IsSymptom(word, nature, pos, sentencePos, heading) v !Equals(heading,complained) v TmpSymptom(word, nature, pos, sentencePos, heading)
+#complained段落Diag: !IsDiag(word, nature, pos, sentencePos, heading) v !Equals(heading,complained) v TmpSymptom(word, Symptom, pos, sentencePos, heading)
+
+
+complained段落特殊处理: !Word(word, nature, pos, sentencePos, blockPos, recordPos) v !Equals(word,complained) v !Equals(nature,Heading) v St(word, nature, pos, sentencePos, word)
+complained段落特殊处理: !St(word, nature, pos, sentencePos, heading) v !FindFirstAfter(pos, IN_SENTENCE, null, Period,null, null, foundPos, foundWord, foundNature) v SymptomQS(word, nature, pos, sentencePos,foundPos)
+
+
+出现关键字: !IsExists(word, nature, pos, sentencePos) v !Equals(word, 出现) v ReExist(word, nature, pos, sentencePos)
+
+出现关键字: !WordAndHeading(word, nature, pos, sentencePos, heading) v !Equals(word, 再发) v ReExist(word, nature, pos, sentencePos)
+
+
+找寻结束关键字: !ReExist(word, nature, pos, sentencePos) v !FindFirstAfter(pos, IN_SENTENCE, ，, null,null, null, foundPos, foundWord, foundNature) v SymptomQS(word, nature, pos, sentencePos,foundPos)         
+
+
+
+
+时间: !IsDate(pos, word, nature) v !FindFirstBefore(pos, IN_SENTENCE, null, Heading,null, null, foundPos, foundWord, foundNature) v IsDateAndHeading(pos, word, nature,foundWord)
+
+时间后的出现: !IsDateAndHeading(pos, word, nature,foundWord) v !FindFirstAfter(pos,IN_SENTENCE,出现,null,null,null,foundPos, foundWord, foundNature) v TestYouyinQS(pos, foundPos)
+ 
+诱因判断:  !TestYouyinQS(pos, foundPos) v !NoWordBetween(null,Punc,pos,foundPos) v !Word(word, nature, pos,sentencePos,blockPos,recordPos) v TestReYouyinQS(pos, foundPos,sentencePos)
+
+诱因: !TestReYouyinQS(pos, foundPos,sentencePos) v !FindText(pos, foundPos,false,false,foundText) v TestYouyin(pos, foundPos,sentencePos,foundText)
+
+
+
+症状: !SymptomQS(word, nature, pos, sentencePos,foundPos) v !FindText(pos,foundPos,false,false,foundText) v NewSymptom(pos,foundPos,sentencePos,foundText)
+
+症状+诱因: !NewSymptom(startPos1, endPos1,sentencePos,foundText1) v !TestYouyin(startPos2, endPos2, sentencePos, foundText2) v !After(endPos2,startPos1) v !NoWordBetween(null,Punc,endPos2,startPos1) v SZ(startPos1, endPos1,sentencePos,foundText1,foundText2)
+
+症状+诱因: !NewSymptom(pos, endPos1,sentencePos,foundText1) v !TestYouyin(startPos2, pos, sentencePos, foundText2) v TestSymptomAndYouyin(pos, endPos1,sentencePos,foundText1,foundText2)
+
+症状+伴随: !NewSymptom(startPos, endPos,sentencePos,foundText) v !FindFirstAfter(endPos,IN_SENTENCE,伴,null,null,null, foundPos, foundWord, foundNature) v  TestTmpSymptom(startPos, endPos,sentencePos,foundText,foundPos)
+
+症状+伴随序列: !TestTmpSymptom(startPos, endPos,sentencePos,foundText,foundPos) v !FollowSymptom(foundPos, endPos1, sentencePos, text) v TestSymptomAndFollow(startPos, endPos,sentencePos,foundText,text)
+
+
+
+

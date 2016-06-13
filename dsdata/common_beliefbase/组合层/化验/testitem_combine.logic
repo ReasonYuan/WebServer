@@ -1,0 +1,22 @@
+
+
+//将序列转化为化验描述
+只存在数值的化验描述: !IsNoUnitTestValue(word, nature, pos) v TestItemDes(word, nature, pos, null, null, null, null, null, null)      
+只存在异常的化验描述: !IsTestItemD(word, nature, pos) v TestItemDes(word, nature, pos, null, null, null, null, null, null)
+只存在数值+单位的化验描述: !IsNoDTestItemVVn(word1, nature1, pos1, word2, nature2, pos2) v TestItemDes(word1, nature1, pos1, word2, nature2, pos2, null, null, null) 
+存在数值+单位+异常的化验描述: !IsTestItemVVnD(word1, nature1, pos1, word2, nature2, pos2, word3, nature3, pos3) v TestItemDes(word1, nature1, pos1, word2, nature2, pos2, word3, nature3, pos3)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

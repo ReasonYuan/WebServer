@@ -1,0 +1,19 @@
+//通过开始标志词与结束标志词，查找检查项所见所示内容，同时过滤文本的首尾标点符号
+标记标点符号:!TagKeyEndWords(word1,nature1,pos1, sentencePos1, heading) v !FindFirstBefore(pos1,IN_SECTION, null, Punc, null, null,foundPos,foundWord,foundNature) v TagKeyEndWordsNoPunc(word1,pos1,foundWord,foundNature,foundPos, sentencePos1, heading)
+标记关键词之后的描述项:!TagKeyWordsAndExams(word1,word2,pos1,pos2, sentencePos1, heading) v !TagKeyEndWordsNoPunc(word4,pos4,word3,nature3,pos3, sentencePos1, heading) v !AfterWithin(pos2,pos3,20) v !FindText(pos2, pos3, false, false, foundText) v ReExamAndDes(word1, pos1, foundText, sentencePos1, heading)
+过滤其他病史:!ReExamAndDes(word1, pos1,foundText, sentencePos1, heading) v !Equals(heading,history_of_present_illness) v ReExamIndicate(word1, pos1, sentencePos1, heading, foundText)
+
+
+//过滤提出文本的首尾标点符号
+标记开始标志词之后的第一个结束标志词:!TagKeyWordsAndExams(word1,word2,pos1,pos2, sentencePos1, heading) v !FindFirstAfter(pos1,IN_SECTION, null, Exam, null, null,foundPos,foundWord,foundNature) v TagTwoKeyWordsAndExams(word1,word2,pos1,pos2,foundWord,foundPos,sentencePos1,heading)
+标记开始标志词之后的第一个结束标志词:!TagKeyWordsAndExams(word1,word2,pos1,pos2, sentencePos1, heading) v !FindFirstAfter(pos1,IN_SECTION, null, TestItem, null, null,foundPos,foundWord,foundNature) v TagTwoKeyWordsAndExams(word1,word2,pos1,pos2,foundWord,foundPos,sentencePos1,heading)
+标记第一个结束词之前的标点符号: !TagTwoKeyWordsAndExams(word1,word2,pos1,pos2,word3,pos3,sentencePos1,heading) v !FindFirstBefore(pos3,IN_SECTION, null, Punc, null, null,foundPos1,foundWord1,foundNature) v TagTwoKeyWordsAndExamsNoPunc(word1,word2,pos1,pos2,foundWord1,foundPos1,sentencePos1,heading)
+标记文本:!TagTwoKeyWordsAndExams(word1,word2,pos1,pos2,word3,pos3,sentencePos1,heading) v !FindText(pos2,pos3,false, false, foundText) v TagExamAndContent(word1, pos1, foundText,foundPos1, sentencePos1,heading)
+
+标记文本:!TagTwoKeyWordsAndExamsNoPunc(word1,word2,pos1,pos2,foundWord1,foundPos1,sentencePos1,heading) v !AfterWithin(pos1,foundPos1,20) v !FindText(pos2,foundPos1,false, false, foundText) v TagExamAndContent(word1, pos1, foundText,foundPos1, sentencePos1,heading)
+过滤其他病史:!TagExamAndContent(word1, pos1, foundText, foundPos1, sentencePos1, heading) v !Equals(heading, history_of_present_illness)  v ReExamIndicate(word1, pos1, sentencePos1, heading, foundText)
+
+直接找检查项之后的文本:!IsExam(word1, nature1, pos1, sentencePos1, heading) v !FindFirstAfter(pos1,IN_SECTION, 。, Punc, null, null,foundPos,foundWord,foundNature) v IsExamMarkPunc(word1,pos1,foundWord, foundPos, sentencePos1, heading)
+标记文本:!IsExamMarkPunc(word1,pos1,word2, pos2, sentencePos1, heading) v !FindText(pos1,pos2,false, false, foundText) v TagExamText(word1,pos1, sentencePos1,heading,foundText)
+放入集合:!TagExamText(word1,pos1, sentencePos1,heading,foundText) v !Equals(heading,history_of_present_illness) v ReExamIndicateW(word1, pos1, sentencePos1, heading, foundText)
+

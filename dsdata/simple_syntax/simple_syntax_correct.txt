@@ -1,0 +1,65 @@
+
+#把错误识别的化验项转换成检查项
+exists nature(标点符号).skip(X:1-).nature(Y:化验项).word(\:,nature(标点符号)).nature(化验项).skip(1-).nature(数值) => combine(X+Y=检查项).tag(tag1)
+#把错误未识别的转换成检查项
+exists nature(时间).skip(1-).nature(X:未识别).word(\:,nature(标点符号)).nature(化验项).skip(1-).nature(数值) => combine(X=检查项).tag(tag2)
+#把错误未识别的转换成检查项
+exists word(查).nature(X:未识别).skip(*).nature(部位) => combine(X=检查项).tag(tag3)
+#把错误未识别的出院／入院诊断里的诊断提取出来
+#1. 连续两个诊断，一般为并发诊断
+exists nature(数值).nature(X:诊断).nature(Y:诊断).nature(数值) => combine(X+Y=诊断).tag(tag4)
+#2. 最后一项
+exists nature(数值).nature(诊断).nature(数值).nature(X:未识别).skip(X:1-).end => combine(X=诊断).tag(tag5)
+
+#补全用药，这个预测必须只通过人为
+exists nature(行为动词).nature(X:未识别).nature(数值).nature(数值单位) => combine(X=用药).tag(tag6)
+exists nature(行为动词).nature(X:化验项).nature(Y:未识别).nature(标点符号).skip(*).nature(用药).nature(治疗行为)  => combine(X+Y=用药).tag(tag7)
+exists nature(标点符号).nature(X:未识别).skip(Y:1-).nature(Z:未识别).nature(治疗行为).nature(标点符号).skip(*).nature(用药).nature(治疗行为)  => combine(X+Y+Z=用药).tag(tag8)
+exists nature(X:用药).word(Y:片) => combine(X+Y=用药).tag(药品量词合成药1)
+exists nature(X:用药).word(Y:粒) => combine(X+Y=用药).tag(药品量词合成药2)
+exists nature(X:用药).word(Y:针) => combine(X+Y=用药).tag(药品量词合成药3)
+exists nature(X:用药).nature(Y:药品量词) => combine(X+Y=用药).tag(药品量词合成药4)
+
+#模糊药物匹配
+exists word(X:消炎).skip(Y:2-|!nature=标点符号).word(Z:药) => combine(X+Y+Z=用药).tag(模糊用药1)
+exists word(X:TNF).skip(Y:2-|!nature=标点符号).word(Z:单抗) => combine(X+Y+Z=用药).tag(模糊用药2)
+exists word(X:TNF).skip(Y:2-|!nature=标点符号).word(Z:抗体) => combine(X+Y+Z=用药).tag(模糊用药3)
+exists word(X:慢作用).skip(Y:2-|!nature=标点符号).word(Z:药) => combine(X+Y+Z=用药).tag(模糊用药4)
+
+#书名号里的全部是一个词，暂定为未定义
+exists word(《).skip(X:*).word(》) => combine(X=未定义).tag(tag9)
+
+#部位量词后的未识别＋症状应该是部位: 右/部位量词 | 肾囊/未识别 | 肿/症状
+exists nature(部位量词).nature(X:未识别).nature(症状) => combine(X=部位).tag(tag10)
+
+#连续出现的部位因该结合在一起
+exists nature(X:部位).nature(Y:部位) => combine(X+Y=部位).tag(tag11)
+exists nature(X:部位).nature(Y:部位).nature(Z:部位) => combine(X+Y+Z=部位).tag(tag12)
+exists nature(X:部位).nature(Y:部位).nature(Z:部位).nature(F:部位) => combine(X+Y+Z+F=部位).tag(tag12_1)
+exists nature(X:部位).nature(Y:部位修正词) => combine(X+Y=部位).tag(tag13)
+exists nature(X:部位).nature(Y:部位修正词).nature(X:部位) => combine(X+Y+Z=部位).tag(tag14)
+
+#检查项+部位合并
+exists nature(X:检查项).word(Y:\().nature(Z:部位).word(F:\)) => combine(X+Y+Z+F=检查项).tag(tag14_1)
+
+#病状描绘词和症状结合在一起
+exists nature(X:病状描绘词).nature(Y:症状) => combine(X+Y=症状).tag(tag15)
+
+#时间长度加上“前、后”就变成了时间
+#exists nature(X:时间长度).word(Y:前) => combine(X+Y=时间).tag(tag17)
+#exists nature(X:时间长度).word(Y:后) => combine(X+Y=时间).tag(tag18)
+#exists nature(X:时间长度).word(Y:余).word(Z:前) => combine(X+Y+Z=时间).tag(tag19)
+#exists nature(X:时间长度).word(Y:余).word(Z:后) => combine(X+Y+Z=时间).tag(tag20)
+
+#=====下面全部是临时的debug=======
+
+#exists word(予, nature(行为动词)).skip(X:3-).nature(治疗行为).nature(标点符号).nature(用药).nature(治疗行为)  => combine(X=用药)
+
+#exists skip(1+).nature(用药).nature(治疗行为) | !before nature(数值).skip(1+).nature(标点符号) => combine(X=用药)
+#around nature(用药).nature(治疗行为)
+
+#补全用药
+#exists nature(行为动词).skip(X:1-).nature(Y:化验项).word(\:,nature(标点符号)).nature(化验项) => combine(X+Y=检查项)
+
+
+

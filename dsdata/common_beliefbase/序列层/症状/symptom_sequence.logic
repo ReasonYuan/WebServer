@@ -1,0 +1,49 @@
+
+
+
+//症状原子
+#诊断转换为症状: !IsDiag(word, nature, pos, sentencePos, heading) v IsSymptom(word, nature, pos, sentencePos, heading)
+
+症状+部位: !IsSymptom(word, nature, pos, sentencePos, heading) v !IsRegion(word1, nature1, pos1, sentencePos, heading) v !AfterWithin(pos1,pos,2) v IsSymptomAndRegion(word, nature, pos,word1, nature1, pos1, sentencePos, heading)
+
+症状+部位+部位量词: !IsSymptomAndRegion(word, nature, pos,word1, nature1, pos1, sentencePos, heading) v !IsRegionQ(word2, nature2, pos2, sentencePos) v !Follow(pos2,pos1) v IsSRG(word, nature, pos,word1, nature1, pos1,word2, nature2, pos2, sentencePos, heading)
+
+症状+部位+部位修正词: !IsSymptomAndRegion(word, nature, pos,word1, nature1, pos1, sentencePos, heading) v !IsRegionAdj(word2, nature2, pos2, sentencePos) v !Follow(pos2,pos1) v IsSRG(word, nature, pos,word1, nature1, pos1,word2, nature2, pos2, sentencePos, heading)
+
+
+
+
+//排比症状序列
+#排比症状:!IsSymptom(word1, nature1, pos1, sentecePos, heading) v !IsSymptom(word2, nature2, pos2, sentecePos, heading) v !OnlyWordBetween(null, Punc, pos1, pos2) v PaiBiSymptom(word1, nature1, pos1, word2, nature2, pos2, sentecePos, heading)
+
+
+//排比症状序列
+排比症状:!IsSymptom(word1, nature1, pos1, sentecePos, heading) v !IsSymptom(word2, nature2, pos2, sentecePos, heading) v !Follow(pos1, pos2) v PaiBiSymptom(word1, nature1, pos1, word2, nature2, pos2, sentecePos, heading)
+
+
+需要的排比症状: !ReSymptom(word1, nature1, pos1, sentencePos, heading) v !PaiBiSymptom(word1, nature1, pos1, word2, nature2, pos2, sentecePos, heading) v ReSymptom(word2, nature2, pos2, sentencePos, heading)
+
+
+
+//伴随症状序列
+伴随症状: !IsBan(word, nature, pos, sentencePos) v !FindFirstAfter(pos, IN_SENTENCE, 就诊, null, null, null, foundPos, foundWord, foundNature) v FollowSymptomQS(word, nature, pos, foundPos, sentencePos)
+伴随症状: !IsBan(word, nature, pos, sentencePos) v !FindFirstAfter(pos, IN_SENTENCE, ；, null, null, null, foundPos, foundWord, foundNature) v FollowSymptomQS(word, nature, pos, foundPos, sentencePos)
+伴随症状: !IsBan(word, nature, pos, sentencePos) v FindFirstAfter(pos, IN_SENTENCE, 就诊, null, null, null, foundPos, foundWord, foundNature) v FindFirstAfter(pos, IN_SENTENCE, ；, null, null, null, foundPos, foundWord, foundNature) v FollowSymptomQS(word, nature, pos, null, sentencePos)
+伴随症状: !FollowSymptomQS(word, nature, pos, foundPos, sentencePos) v !FindText(pos, foundPos, false, false, foundText) v FollowSymptom(pos, foundPos, sentencePos, foundText)
+
+
+
+
+
+
+//取出存在动词到症状的序列
+症状序列: !ReSymptom(word, nature, pos, sentencePos, heading) v !FindFirstBefore(pos, IN_SENTENCE, null, Exists, null, null, foundPos, foundWord, foundNature) v RealSymptom(word, nature, pos, sentencePos, heading,foundPos)
+
+
+
+症状: !RealSymptom(word, nature, pos, sentencePos, heading,foundPos) v !FindText(foundPos, pos, true, true, foundText) v Symptom(foundPos, pos, foundText)
+
+
+
+
+

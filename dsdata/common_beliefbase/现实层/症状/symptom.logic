@@ -1,0 +1,33 @@
+
+
+
+标记症状所属日期: !IsSymptom(word1, nature1, pos1, sentencePos, heading) v !FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+
+标记无日期症状: !IsSymptom(word1, nature1, pos1, sentencePos, heading) v FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v NoTimeTagDate(pos1, word1, null, null, null, nature1, heading)
+
+
+//最终需要的症状:判断需要的段落
+症状: !ReSymptom(word, nature, pos, sentencePos, heading) v !AllSymptom(sentencePos, heading, word, nature, pos,word1, nature1, pos1, word2, nature2, pos2)  v !Equals(heading,history_of_present_illness) v FinalReSymptom(sentencePos, heading, word, nature, pos,word1, nature1, pos1, word2, nature2, pos2)
+
+找寻症状之前的诱因关键词: !ReSymptom(word, nature, pos, sentencePos, heading) v !FindFirstBefore(pos, IN_SENTENCE, 因, null, null, null, foundPos, foundWord, foundNature) v YouyinQiShi(foundPos, pos, sentencePos)     
+
+找寻症状之前的诱因关键词: !ReSymptom(word, nature, pos, sentencePos, heading) v !FindFirstBefore(pos, IN_SENTENCE, 缘于, null, null, null, foundPos, foundWord, foundNature) v YouyinQiShi(foundPos, pos, sentencePos)
+
+找寻症状之前的诱因关键词: !ReSymptom(word, nature, pos, sentencePos, heading) v !FindFirstBefore(pos, IN_SENTENCE, 由于, null, null, null, foundPos, foundWord, foundNature) v YouyinQiShi(foundPos, pos, sentencePos)
+
+找寻症状之前的诱因关键词: !ReSymptom(word, nature, pos, sentencePos, heading) v !FindFirstBefore(pos, IN_SENTENCE, 在, null, null, null, foundPos, foundWord, foundNature) v YouyinQiShi(foundPos, pos, sentencePos)
+
+重新验证诱因关键词对应的症状: !YouyinQiShi(pos1, pos2, sentencePos) v !FindFirstAfter(pos1, IN_SENTENCE, null, Symptom, null, null, foundPos, foundWord, foundNature) v YouyinQS(pos1,foundPos,sentencePos)
+删除一些错误的: !YouyinQS(pos1,foundPos,sentencePos) v !NoWordBetween(，, null, pos1, foundPos) v !NoWordBetween(；, null, pos1, foundPos) v !NoWordBetween(。, null, pos1, foundPos) v !NoWordBetween(：, Punc, pos1, foundPos) v ReYouyinQS(pos1,foundPos,sentencePos) 
+
+诱因: !ReYouyinQS(startPos, endPos, sentencePos) v !FindText(startPos, endPos, true, true, foundText) v Youyin(startPos, endPos, sentencePos, foundText)
+
+标记症状诱因: !ReSymptom(word1, nature1, pos1, sentencePos, heading) v !Youyin(startPos, endPos, sentencePos, foundText) v !AfterWithin(endPos, pos1, 5) v SymptomAndYouyin(word1, nature1, pos1,startPos, endPos, sentencePos, foundText)
+
+标记症状的伴随: !ReSymptom(word1, nature1, pos1, sentencePos, heading) v !FindFirstAfter(pos1, IN_SENTENCE, 伴, null, null, null, foundPos, foundWord, foundNature) v ReSymptomAndB(word1, nature1, pos1, sentencePos, heading,foundPos)
+标记症状的伴随: !ReSymptom(word1, nature1, pos1, sentencePos, heading) v !FindFirstAfter(pos1, IN_SENTENCE, 伴随, null, null, null, foundPos, foundWord, foundNature) v ReSymptomAndB(word1, nature1, pos1, sentencePos, heading,foundPos)
+标记症状的伴随: !ReSymptom(word1, nature1, pos1, sentencePos, heading) v !FindFirstAfter(pos1, IN_SENTENCE, 伴有, null, null, null, foundPos, foundWord, foundNature) v ReSymptomAndB(word1, nature1, pos1, sentencePos, heading,foundPos)
+标记症状的伴随: !ReSymptomAndB(word1, nature1, pos1, sentencePos, heading,foundPos) v  !FollowSymptom(foundPos, endPos, sentencePos, text) v ReSymptomAndBan(word1, nature1, pos1, sentencePos, heading,text)
+
+
+

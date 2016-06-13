@@ -1,0 +1,46 @@
+#被括号包围R: !BriefWord(word, nature, pos) v !BriefWord(word1, nature1, pos1) v !Follow(pos, pos1) v !Equals(word1, ")") v SurroundByBracket(pos, word, nature)
+#被括号包围L: !BriefWord(word, nature, pos) v !BriefWord(word1, nature1, pos1) v !Follow(pos1, pos) v !Equals(word1, "(") v SurroundByBracket(pos, word, nature)
+#日期被括号包围: !SurroundByBracket(pos, word, nature) v !Equals(nature, Date) v DateSurroundByBracket(pos, word, nature)
+#中间只有符号间隔且不是句号: !BriefWord(word1, nature1, pos1) v !BriefWord(word2, nature2, pos2) v !AfterWithin(pos1, pos2, 3) v !NoWordBetween("。", null, pos1, pos2) v !OnlyWordBetween(null, Punc, pos1, pos2) v OnlyPuncBetween(word1, nature1, pos1, word2, nature2, pos2)
+#从日期开始，直到段落结束或者遇到另一个日期，否则都属于这个日期所指的内容
+#标记日期后的内容为这个日期的范围: !BriefWord(word1, nature1, pos1) v !Equals(nature1, Date) v !BriefWord(word2, nature2, pos2) v !After(pos1, pos2) v !NoWordBetween(null, Heading, pos1, pos2) v !NoWordBetween(null, Date, pos1, pos2) v Equals(nature2, Date) v Equals(nature2, Date) v TryTagDateFollows(pos2, word2, nature2, word1)
+#标记后面的症状: !TryTagDateFollows(pos1, word1, nature1, date) v !Equals(nature1, Symptom) v TagDate(pos1, word1, nature1, date)
+#标记后面的用药: !TryTagDateFollows(pos1, word1, nature1, date) v !Equals(nature1, Drug) v TagDate(pos1, word1, nature1, date)
+#标记后面的检查项: !TryTagDateFollows(pos1, word1, nature1, date) v !Equals(nature1, Exam) v TagDate(pos1, word1, nature1, date)
+
+#测试findAround1: !BriefWord(word, nature, pos) v !FindAround(pos, 1, ")", null, null, null, foundPos, foundWord, foundNature) v FindLeftBracketAround(pos, word, foundPos, foundWord, foundNature)
+#测试findAround2: !BriefWord(word, nature, pos) v !FindAround(pos, -1, "(", null, null, null, foundPos, foundWord, foundNature) v FindLeftBracketAround(pos, word, foundPos, foundWord, foundNature)
+#测试最大日期: !FindMaxDate(pos, word, nature) v MaxDate(pos, word, nature)
+#测试存在某个词: !ExistWord(阳性, null, null, null, foundPos, foundWord, foundNature) v ExistsSomeWord(foundPos, foundWord, foundNature)
+#测试不存在某个词: ExistWord(举个栗子, null, null, null, foundPos, foundWord, foundNature) v !HaveSomeWord(举个栗子, null, SOME_TAG)
+
+//测试逻辑
+#测试FindFirstBefore: !BriefWord(word, nature, pos) v !Equals(word, 申请日期) v !FindFirstAfter(pos, IN_SENTENCE, null, Date, null, null, foundPos, foundWord, foundNature) v ApplyDate(foundPos, foundWord, foundNature)
+#测试FindFirstAfter: !ApplyDate(pos, word, nature) v !FindFirstBefore(pos, IN_SENTENCE, null, Heading, null, null, foundPos, foundWord, foundNature) v BackTest(foundPos, foundWord, foundNature)
+
+
+#括号或冒号后的日期说面前者，其他的统统认为说明后续内容, 直到段落结尾
+#用于说明前者的日期1: !OnlyPuncBetween(word1, nature1, pos1, word2, nature2, pos2) v !BriefWord(wordB, natureB, posB) v !After(pos1, posB) v !After(posB, pos2) v !Equals(wordB, ":") v !Equals(nature2, Date) v TryTagDate4Pre(pos1, word1, nature1, word2)
+#用于说明前者的日期2: !OnlyPuncBetween(word1, nature1, pos1, word2, nature2, pos2) v !BriefWord(wordB, natureB, posB) v !After(pos1, posB) v !After(posB, pos2) v !Equals(wordB, "：") v !Equals(nature2, Date) v TryTagDate4Pre(pos1, word1, nature1, word2)
+#用于说明前者的日期3: !OnlyPuncBetween(word1, nature1, pos1, word2, nature2, pos2) v !BriefWord(wordB, natureB, posB) v !After(pos1, posB) v !After(posB, pos2) v !Equals(wordB, "（") v !Equals(nature2, Date) v TryTagDate4Pre(pos1, word1, nature1, word2)
+#用于说明前者的日期3: !OnlyPuncBetween(word1, nature1, pos1, word2, nature2, pos2) v !BriefWord(wordB, natureB, posB) v !After(pos1, posB) v !After(posB, pos2) v !Equals(wordB, "(") v !Equals(nature2, Date) v TryTagDate4Pre(pos1, word1, nature1, word2)
+#如果前者是时间副词tag更前者: !TryTagDate4Pre(pos1, word1, nature1, date) v !Equals(nature1, TimeAdv) v !BriefWord(word2, nature2, pos2) v !Follow(pos2, pos1) v TagDate(pos2, word2, nature2, date)
+#如果前者不是是时间副词直接tag: !TryTagDate4Pre(pos1, word1, nature1, date) v Equals(nature1, TimeAdv) v TagDate(pos1, word1, nature1, date)
+
+#讲诉内容大意相同: !SentenceTells(pos1, content) v !SentenceTells(pos2, content) v !Follow(pos1, pos2) v SameConceptSentences(pos2, pos1, content)
+#引用前面的的日期: !IsDate(pos1, date) v IsDate(pos2, date2) v !Follow(pos1, pos2) v RefDate(pos2, pos1, date)
+#引用前面的的日期引用: !RefDate(pos1, prePos, date) v IsDate(pos2, date2) v IsHeading(pos2) v !Follow(pos1, pos2) v RefDate(pos2, prePos, date)
+#看病时的目前等，参考出院日期: !Word(word, nature, pos, sentencePo, blockPoss, recordPos) v !EqualsAttr(pos, timeformat, WHAT_IS_NOW) v RefDischargeDate(pos)
+#出院日期: !BriefWord(word1, nature1, pos1) v !BriefWord(word2, nature2, pos2) v !Follow(pos1, pos2) v !Equals(word1, 出院日期) v !Equals(nature2, Date) v DischargeDate(pos2, word2)
+
+#出院日期: !BriefWord(word1, nature1, pos1) v !BriefWord(word2, nature2, pos2) v !After(pos1, pos2) v !Equals(word1, 出院日期) v !Equals(nature2, Date) v !NoWordBetween(null, nature2, pos1, pos2) v DischargeDate(pos2, word2)
+
+#指向出院日期: !RefDischargeDate(pos1) v !DischargeDate(pos2, date) v RefDate(pos1, pos2, date)
+
+
+#抽烟致癌: !Smoke(x) v Cancer(x)
+#朋友是相互的: !Friend(x, y) v Friend(y, x)
+#FriendSmokeCauseSmoke: !Friend(x, y) v !Smoke(x) v Smoke(y)
+#AfterAfterIsAfter: !After(x, y) v !After(y, z) v After(x, z)
+#logic5: !After(x, y) v !HaveDate(x) v HaveDateRef(y)
+

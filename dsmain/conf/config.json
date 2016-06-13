@@ -1,0 +1,27 @@
+{
+	"host":"http://121.199.16.216:8091",
+	"bucket":"research",
+	"projectDir":"../dsdata/projects/784",
+	"n1sqlFile":"./n1sql/test2.sql",
+	"version":"v04",
+	"fetchDataFromDB":false,
+	"storeResultsToDB":false,
+	"recordsParser":"com.yiyihealth.ai.dsmain.medicine.wx.JsonRecordParser",
+	"dumpMems":true,
+	"doNlp":false,
+	"doESearch":false,
+	"contextLogics":"logic_config.json",
+	"dicInfomation":{
+		"updateDicFromDB":false,
+		"mongoServerIp":"114.55.36.11",
+		"DicSavePath":"./dict/病历分词字典.json",
+		"dbName":"test",
+		"tableName":"words"
+	},
+	"export":{
+		"doExport":true,
+		"format":"json",
+		"exporter":"com.yiyihealth.ai.dsmain.exports.JsonExporter",
+		"outputDirectory":"$projectDir/output"
+	}
+}

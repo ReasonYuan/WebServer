@@ -1,0 +1,13 @@
+[
+	"../../common_beliefbase/现实层/检查项/exam.logic",
+	"../../common_beliefbase/现实层/用药/drug.logic",
+	"../../common_beliefbase/现实层/症状/symptom.logic",
+	"../../common_beliefbase/现实层/化验/testitem.logic",
+	"../../common_beliefbase/现实层/其他/other.logic",
+	"../../common_beliefbase/原子层/化验/testitem_atom.logic",
+	"../../common_beliefbase/序列层/化验/testitem_sequence.logic",
+	"../../common_beliefbase/组合层/化验/testitem_combine.logic",
+	"../../common_beliefbase/序列层/sequence.logic",
+	"../../common_beliefbase/原子层/诊断/diag_atom.logic",
+	"../../common_beliefbase/原子层/症状/symptom_atom.logic"
+]

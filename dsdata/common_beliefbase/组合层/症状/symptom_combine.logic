@@ -1,0 +1,11 @@
+
+
+
+//去重
+给症状去重: !IsSRG(word, nature, pos,word1, nature1, pos1,word2, nature2, pos2, sentencePos, heading) v @AllSymptom(sentencePos, heading, word, nature, pos,word1, nature1, pos1, word2, nature2, pos2)
+给症状去重: !IsSymptomAndRegion(word, nature, pos,word1, nature1, pos1, sentencePos, heading) v @AllSymptom(sentencePos, heading, word, nature, pos, word1, nature1, pos1, null, null, null)
+给症状去重: !IsSymptom(word, nature, pos, sentencePos, heading) v @AllSymptom(sentencePos, heading, word, nature, pos, null, null, null, null, null, null)
+
+
+
+

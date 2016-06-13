@@ -1,0 +1,18 @@
+标记开始标志关键词:!IsExam(word1, nature1, pos1, sentencePos1, heading) v !FindFirstAfter(pos1,IN_SENTENCE, 示, null, null, null,foundPos,foundWord,foundNature) v TagKeyStartWords(word1,foundWord,pos1,foundPos, sentencePos1, heading)
+确定关键词紧挨着检查项:!TagKeyStartWords(word1,word2,pos1,pos2, sentencePos1, heading) v !AfterWithin(pos1,pos2,2) v TagKeyWordsAndExams(word1,word2,pos1,pos2, sentencePos1, heading) 
+标记开始标志关键词:!IsExam(word1, nature1, pos1, sentencePos1, heading) v !FindFirstAfter(pos1,IN_SENTENCE, "：", null, null, null,foundPos,foundWord,foundNature) v TagKeyStartWords(word1,foundWord,pos1,foundPos, sentencePos1, heading)
+确定关键词紧挨着检查项:!TagKeyStartWords(word1,word2,pos1,pos2, sentencePos1, heading) v !AfterWithin(pos1,pos2,1) v TagKeyWordsAndExams(word1,word2,pos1,pos2, sentencePos1, heading) 
+标记开始标志关键词:!IsExam(word1, nature1, pos1, sentencePos1, heading) v !FindFirstAfter(pos1,IN_SENTENCE, 显示为, null, null, null,foundPos,foundWord,foundNature) v TagKeyStartWords(word1,foundWord,pos1,foundPos, sentencePos1, heading)
+确定关键词紧挨着检查项:!TagKeyStartWords(word1,word2,pos1,pos2, sentencePos1, heading) v !AfterWithin(pos1,pos2,1) v TagKeyWordsAndExams(word1,word2,pos1,pos2, sentencePos1, heading)
+标记开始标志关键词:!IsExam(word1, nature1, pos1, sentencePos1, heading) v !FindFirstAfter(pos1,IN_SENTENCE, 提示, null, null, null,foundPos,foundWord,foundNature) v TagKeyStartWords(word1,foundWord,pos1,foundPos, sentencePos1, heading)
+确定关键词紧挨着检查项:!TagKeyStartWords(word1,word2,pos1,pos2, sentencePos1, heading) v !AfterWithin(pos1,pos2,1) v TagKeyWordsAndExams(word1,word2,pos1,pos2, sentencePos1, heading)
+
+标记结束标志关键词:!WordAndHeading(word1, nature1, pos1, sentencePos1, heading) v !Equals(word1, 予)  v TagKeyEndWords(word1,nature1,pos1, sentencePos1, heading)
+标记结束标志关键词:!WordAndHeading(word1, nature1, pos1, sentencePos1, heading) v !Equals(word1, 予以) v TagKeyEndWords(word1,nature1,pos1, sentencePos1, heading)
+标记结束标志关键词:!WordAndHeading(word1, nature1, pos1, sentencePos1, heading) v !Equals(word1, 给予) v TagKeyEndWords(word1,nature1,pos1, sentencePos1, heading)
+标记结束标志关键词:!WordAndHeading(word1, nature1, pos1, sentencePos1, heading) v !Equals(word1, 诊断为) v TagKeyEndWords(word1,nature1,pos1, sentencePos1, heading)
+标记结束标志关键词:!WordAndHeading(word1, nature1, pos1, sentencePos1, heading) v !Equals(word1, 诊断) v TagKeyEndWords(word1,nature1,pos1, sentencePos1, heading)
+标记结束标志关键词:!WordAndHeading(word1, nature1, pos1, sentencePos1, heading) v !Equals(word1, 考虑) v TagKeyEndWords(word1,nature1,pos1, sentencePos1, heading)
+标记结束标志关键词:!WordAndHeading(word1, nature1, pos1, sentencePos1, heading) v !Equals(word1, 。) v TagKeyEndWords(word1,nature1,pos1, sentencePos1, heading)
+
+

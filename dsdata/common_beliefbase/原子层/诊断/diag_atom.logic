@@ -1,0 +1,17 @@
+
+
+//诊断之前存在WordNo
+WordNo诊断原子: !IsDiag(word, nature, pos, sentencePos, heading) v !FindFirstBefore(pos,IN_SENTENCE,null,WordNo,null,null, foundPos, foundWord, foundNature) v IsDiagAndWordNo(word, nature, pos, sentencePos, heading,foundPos)
+
+WordNo诊断原子之间存在“，”判断为诊断: !IsDiagAndWordNo(word, nature, pos, sentencePos, heading,foundPos) v NoWordBetween(，, Punc, foundPos, pos) v TmpDiag(word, nature, pos, sentencePos, heading)
+
+WordNo诊断原子之间存在“；”判断为诊断: !IsDiagAndWordNo(word, nature, pos, sentencePos, heading,foundPos) v NoWordBetween(；, Punc, foundPos, pos) v TmpDiag(word, nature, pos, sentencePos, heading)
+
+
+
+没有找到存在WordNo的诊断原子: !IsDiag(word, nature, pos, sentencePos, heading) v FindFirstBefore(pos, IN_SENTENCE, null, WordNo, null, null, foundPos, foundWord, foundNature) v TmpDiag(word, nature, pos, sentencePos, heading)
+
+诊断前面不存在符合、提示: !TmpDiag(word, nature, pos, sentencePos, heading) v FindAround(pos, ~-2, 符合, null, null, null, foundPos, foundWord, foundNature) v FindAround(pos, ~-2, 所示, null, null, null, foundPos, foundWord, foundNature) v FindAround(pos, ~-2, 示, null, null, null, foundPos, foundWord, foundNature) v ReTmpDiag(word, nature, pos, sentencePos, heading)
+
+诊断原子: !ReTmpDiag(word, nature, pos, sentencePos, heading) v !Equals(heading,history_of_present_illness) v ReDiag(word, nature, pos, sentencePos, heading)
+

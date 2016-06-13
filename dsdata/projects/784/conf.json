@@ -1,0 +1,10 @@
+{
+  "fileFilter":[
+    "CY",
+    "RY"
+  ],
+  "anchorFilter":[
+    "history_of_present_illness",
+    "physical_examination"
+  ]
+}

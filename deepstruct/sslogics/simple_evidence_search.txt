@@ -1,0 +1,8 @@
+
+#检查项的日期的证据
+exists nature(检查项).skip(5-).nature(POS:时间).nature(标点符号).skip(3-).nature(化验项).skip(1-).nature(数值) => evidence(DateOfExam).tag(dateOfExam)
+#出院日期的证据
+exists word(出院日期).skip(1-).nature(POS:时间) => evidence(DateOfDischarge).tag(dateOfDischarge)
+#入院日期的证据
+exists word(入院日期).skip(1-).nature(POS:时间) => evidence(DateOfAdmission).tag(dateOfAdmission)
+

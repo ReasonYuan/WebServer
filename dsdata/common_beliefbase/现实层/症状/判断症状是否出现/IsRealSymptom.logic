@@ -1,0 +1,30 @@
+//症状+Heading
+是症状: !BriefWordAndHeading(word, nature, pos, heading) v !Equals(nature, Symptom) v !Equals(heading, admission_detail) v IsSymptom(word, nature, pos, heading)
+是症状: !BriefWordAndHeading(word, nature, pos, heading) v !Equals(nature, Symptom) v !Equals(heading, history_of_present_illness) v IsSymptom(word, nature, pos, heading)
+是症状: !BriefWordAndHeading(word, nature, pos, heading) v !Equals(nature, Symptom) v !Equals(heading, diagnosis_treatment) v IsSymptom(word, nature, pos, heading)
+是症状: !BriefWordAndHeading(word, nature, pos, heading) v !Equals(nature, Symptom) v !Equals(heading, after_treatment) v IsSymptom(word, nature, pos, heading)
+是症状: !BriefWordAndHeading(word, nature, pos, heading) v !Equals(nature, Symptom) v !Equals(heading, discharge_prescribed) v IsSymptom(word, nature, pos, heading)
+
+
+#症状: !BriefWordAndHeading(word, nature, pos, heading) v !Equals(nature, Symptom) v !Equals(heading, 入院时主要症状和体征) v IsSymptom(word, nature, pos, heading)
+部位: !BriefWord(word2, nature2, pos2) v !Equals(nature2, Region) v IsRegion(word2, nature2, pos2)
+部位量词: !BriefWord(word3, nature3, pos3) v !Equals(nature3, RegionQ)  v IsRegionQ(word3, nature3, pos3)
+
+部位+症状: !IsSymptom(word, nature, pos, heading) v !IsRegion(word2, nature2, pos2) v !Follow(pos2, pos) v IsSymptom2(word, nature, pos,word2, nature2, pos2, heading)
+症状中包含部位: !IsSymptom(word, nature, pos, heading) v !BriefWord(word2, nature2, pos2) v Equals(nature2, Region) v !Follow(pos2, pos) v IsRealSymptom(word, nature, pos, heading)
+
+部位量词+部位+症状: !IsSymptom2(word, nature, pos,word2, nature2, pos2, heading) v !IsRegionQ(word3, nature3, pos3) v !Follow(pos3, pos2) v IsRealSymptom3(word, nature, pos,word2, nature2, pos2,word3, nature3, pos3, heading)
+无部位量词的部位+症状: !IsSymptom2(word, nature, pos,word2, nature2, pos2, heading) v !BriefWord(word3, nature3, pos3) v Equals(nature3, RegionQ) v !Follow(pos3, pos2) v IsRealSymptom2(word, nature, pos,word2, nature2, pos2, heading)
+
+
+描述为肯定的症状(出现): !IsRealSymptom(word, nature, pos, heading) v !FindFirstBefore(pos, IN_SENTENCE, null, Exists, null, null, foundPos, foundWord, foundNature) v RealSymptom(word, nature, pos, null, null, null, null, null, null, heading)
+描述为肯定的症状(出现): !IsRealSymptom(word, nature, pos, heading) v FindFirstBefore(pos, IN_SENTENCE, null, WordNo, null, null, foundPos, foundWord, foundNature) v RealSymptom(word, nature, pos, null, null, null, null, null, null, heading)
+
+描述为肯定的症状(出现): !IsRealSymptom2(word, nature, pos,word2, nature2, pos2, heading) v !FindFirstBefore(pos2, IN_SENTENCE, null, Exists, null, null, foundPos, foundWord, foundNature) v RealSymptom(word, nature, pos,word2, nature2, pos2, null, null, null, heading)
+描述为肯定的症状(出现): !IsRealSymptom2(word, nature, pos,word2, nature2, pos2, heading) v FindFirstBefore(pos2, IN_SENTENCE, null, WordNo, null, null, foundPos, foundWord, foundNature) v RealSymptom(word, nature, pos,word2, nature2, pos2, null, null, null, heading)
+
+描述为肯定的症状(出现): !IsRealSymptom3(word, nature, pos,word2, nature2, pos2,word3, nature3, pos3, heading) v !FindFirstBefore(pos3, IN_SENTENCE, null, Exists, null, null, foundPos, foundWord, foundNature) v RealSymptom(word, nature, pos,word2, nature2, pos2,word3, nature3, pos3, heading)
+描述为肯定的症状(出现): !IsRealSymptom3(word, nature, pos,word2, nature2, pos2,word3, nature3, pos3, heading) v FindFirstBefore(pos3, IN_SENTENCE, null, WordNo, null, null, foundPos, foundWord, foundNature) v RealSymptom(word, nature, pos,word2, nature2, pos2,word3, nature3, pos3, heading)
+
+
+

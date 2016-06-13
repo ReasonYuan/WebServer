@@ -1,0 +1,4 @@
+
+#检查项的日期的证据, 输出来观察
+exists skip(X:16-).nature(Y:时间).skip(Z:16-) => combine(X+Y+Z=时间).tag(forObserving)
+

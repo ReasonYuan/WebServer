@@ -1,0 +1,9 @@
+找药品: !FinalAdminTagDate(pos, word, pos1,word2,nature,nature1) v !Equals(nature1, Drug) v DrugAdminWord(word, nature, pos, word2, pos1)
+
+找药品: !FinalOutAdminTagDate(pos, word, pos1,word2,nature,nature1) v !Equals(nature1, Drug) v DrugOutAdminWord(word, nature, pos, word2, pos1)
+
+
+找锚点: ! DrugAdminWord(word, nature, pos, word2, pos1) v !FindFirstBefore(pos, IN_SECTION, null, Heading, null, null, foundPos, foundWord, foundNature) v DrugWordWithAdminHeading(word, nature ,pos,word2, foundWord, pos1)
+
+
+找锚点: ! DrugOutAdminWord(word, nature, pos, word2, pos1) v !FindFirstBefore(pos, IN_SECTION, null, Heading, null, null, foundPos, foundWord, foundNature) v DrugWordWithOutAdminHeading(word, nature ,pos,word2, foundWord, pos1)

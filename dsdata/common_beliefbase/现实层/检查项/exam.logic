@@ -1,0 +1,27 @@
+
+标记无日期的检查项: !IsExam(word, nature, pos, sentencePos, heading) v FindFirstAfter(pos, IN_SENTENCE, null, Date, null, null, foundPos1, foundWord1, foundNature1) v FindFirstBefore(pos, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v NoTimeTagDate(pos, word, null, null, null, nature, heading)
+
+
+#标记检查项所属日期: !IsExam(word, nature, pos, sentencePos, heading) v !IsDate(pos1, word1, nature1) v !OnlyWordBetween(（, Punc, pos, pos1) v TagDate(pos, word, pos1, word1, nature1, nature)
+
+检查项后面有日期: !IsExam(word, nature, pos, sentencePos, heading) v !FindFirstAfter(pos, IN_SENTENCE, null, Date, null, null, foundPos, foundWord, foundNature) v TmpTagDate(pos, word, foundPos, foundWord, foundNature, nature)
+标记检查项所属日期: !TmpTagDate(pos, word, foundPos, foundWord, foundNature, nature) v !OnlyWordBetween(（, Punc, pos, foundPos) v TagDate(pos, word, foundPos, foundWord, foundNature, nature)
+
+去掉后面不是括号的时间: !TmpTagDate(pos, word, pos1, word1, nature1, nature) v OnlyWordBetween(（, Punc, pos, pos1) v FindFirstBefore(pos, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v NoTimeTagDate(pos, word, null, null, null, nature, heading)
+
+标记检查项所属日期: !IsExam(word, nature, pos, sentencePos, heading) v FindFirstAfter(pos, IN_SENTENCE, null, Date, null, null, foundPos1, foundWord1, foundNature1) v !FindFirstBefore(pos, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v TagDate(pos, word, foundPos, foundWord, foundNature, nature)
+
+
+
+
+//所有的检查项+所示内容:
+
+检查项去重:!ReExamIndicate(word1, pos1, sentencePos1, heading, foundText) v @ReExamIndicateQC(word1, pos1, sentencePos1, heading, foundText)
+
+检查项去重:!IsExam(word1, nature1, pos1, sentencePos1, heading) v @ReExamIndicateQC(word1, pos1, sentencePos1, heading, null)
+
+检查项去长:!ReExamIndicateQC(word1, pos1, sentencePos1, heading, foundText) v $ReExamIndicatewxx(word1, pos1, sentencePos1, heading, foundText,4)
+
+
+
+

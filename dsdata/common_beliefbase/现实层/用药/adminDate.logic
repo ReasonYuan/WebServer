@@ -1,0 +1,30 @@
+入院日期1: !IsDate(pos1, word1, nature1) v !FindFirstBefore(pos1,IN_SENTENCE,"admission_date", null, null, null, foundPos, foundWord, foundNature) v AdminDate1(pos1,word1, nature1,foundPos)
+
+入院日期2: !AdminDate1(pos1,word1, nature1,foundPos) v !Follow(foundPos, pos1)  v AdmissionDate(pos1, word1, nature1)
+
+出院日期1: !IsDate(pos1, word1, nature1) v !FindFirstBefore(pos1,IN_SENTENCE,"out_hospital_date", null, null, null, foundPos, foundWord, foundNature) v OutAdminDate1(pos1,word1, nature1,foundPos)
+
+出院日期2: !OutAdminDate1(pos1,word1, nature1,foundPos) v !Follow(foundPos, pos1)  v OutAdminDate(pos1, word1, nature1)
+
+住院号1: !BriefWord(word1, nature1, pos1) v !FindFirstBefore(pos1,IN_SENTENCE,"admission_no", null, null, null, foundPos, foundWord, foundNature) v AdminNum1(pos1,word1, nature1,foundPos)
+
+住院号2: !AdminNum1(pos1,word1, nature1,foundPos) v !Follow(foundPos, pos1)  v AdmissionNum(pos1, word1, nature1)
+
+患者名字1: !BriefWord(word1, nature1, pos1) v !FindFirstBefore(pos1,IN_SENTENCE,"patient_name", null, null, null, foundPos, foundWord, foundNature) v PatientName1(pos1,word1, nature1,foundPos)
+
+患者名字2: !PatientName1(pos1,word1, nature1,foundPos) v !Follow(foundPos, pos1)  v IsPatientName(pos1, word1, nature1)
+
+加入存在药物日期: !FinalTagDate(pos1, word1, foundPos, foundWord, foundNature, nature1) v FinalAdminTagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+
+加入存在药物日期: !FinalTagDate(pos1, word1, foundPos, foundWord, foundNature, nature1) v FinalOutAdminTagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+
+加入日期: EndTagDate(pos1, word1, null, null, null, nature1) v !AdmissionDate(pos, word, nature) v FinalAdminTagDate(pos1, word1, pos, word, nature, nature1)
+
+加入日期: EndTagDate(pos1, word1, null, null, null, nature1) v !OutAdminDate(pos, word, nature) v FinalOutAdminTagDate(pos1, word1, pos, word, nature, nature1)
+
+
+
+病历号1: !BriefWord(word1, nature1, pos1) v !FindFirstBefore(pos1,IN_SENTENCE,"record_num", null, null, null, foundPos, foundWord, foundNature) v RecordNum1(pos1,word1, nature1,foundPos)
+
+病历号2: !RecordNum1(pos1,word1, nature1,foundPos) v !Follow(foundPos, pos1)  v RecordNum(pos1, word1, nature1)
+

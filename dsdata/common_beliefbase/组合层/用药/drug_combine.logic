@@ -1,0 +1,6 @@
+//用药项原子
+用药VVn: !IsValue(word1, nature1, pos1, sentencePos1) v !IsValueUnit(word2, nature2, pos2, sentencePos1) v !AfterWithin(pos1, pos2, 1) v DrugVVn(word1, word2,nature1, pos1,nature2, pos2,sentencePos1)
+
+用药VVnVVn: !DrugVVn(word1, word2,nature1, pos1,nature2, pos2,sentencePos) v !DrugVVn(word3, word4,nature3, pos3,nature4, pos4,sentencePos) v !AfterWithin(pos2, pos3, 4) v !NoWordBetween(null, Drug, pos2, pos3) v DoubleVVn(word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4)
+
+用药VVnVn: !DrugVVn(word1, word2,nature1, pos1,nature2, pos2,sentencePos) v !IsValueUnit(word3, nature3, pos3, sentencePos) v !AfterWithin(pos2, pos3, 1) v !NoWordBetween(null, Drug, pos2, pos3) v DoubleVVn(word1, word2,word3,null,nature1, pos1,nature2, pos2,nature3, pos3,null, null)

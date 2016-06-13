@@ -1,0 +1,25 @@
+#
+#
+#Build in predicates
+After(x, y)
+Follow(pos1, pos2)
+
+#evidences
+Word(word, nature, pos, sentencePos, blockPos, recordPos)
+
+#inherence predicates
+HaveDateInSentence(pos)
+SentenceTells(pos, content)
+
+SameConceptSentences(pos1, refPos, content)
+DateRefToSentence(pos, refPos)
+
+#简写词，方便书写逻辑
+BriefWord(word, nature, pos)
+
+简写词: !Word(word, nature, pos, sentencePos, blockPos, recordPos) v BriefWord(word, nature, pos)
+是日期: !Word(word, nature, pos, sentencePos, blockPos, recordPos) v !Equals(nature, Date) v IsDate(pos, word)
+
+#有入院日期取入院日期，没有取最小日期
+找入院日期: !BriefWord(word1, nature1, pos1) v !BriefWord(word2, nature2, pos2) v !Equals(word1, "admission_date") v !Follow(pos1, pos2) v !Equals(nature2, Date) v IsAdmissionDate(pos2, word2, nature2)
+

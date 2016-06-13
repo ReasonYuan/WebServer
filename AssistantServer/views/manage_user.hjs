@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]> <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]> <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>宝时助理</title>
+  <link rel="stylesheet" href="../csspages/23-dark-login-form/css/style.css">
+  <!--[if lt IE 9]><script src="../javascripts/ie/html5.js"></script><![endif]-->
+  <link rel="stylesheet" href="../stylesheets/buttons.css"/>
+</head>
+<body>
+  <header>
+  	<h1 class="header-title">宝时关爱助理管理后台</h1>
+  	<div class="header-title header-title-sub">
+  		<p></a> <span class="category">data is sexy</span></p>
+  	</div>
+  </header>
+  <form method="post" id="xpsform" action="/users/register" class="login">
+
+    <p>
+      <label for="hospital_name">助理id:</label>
+      <input type="text" name="phone_number"></input>
+    </p>
+
+    <p>
+      <label for="hospital_name">助理姓名:</label>
+      <input type="text" name="name"></input>
+    </p>
+
+    <p>
+      <label for="template_name">密码:</label>
+      <input type="text" name="password"></input>
+    </p>
+    <p>
+      <label for="template_name">{{flashTitle}}</label>
+      <p>{{flashMsg}}</p>
+    </p>
+    <p>
+      <button type="submit" class="xps_upload button button-glow button-border button-rounded button-primary">创建宝时助理帐号</button>
+    </p>
+    <p>
+      <input type="hidden" name="fromAdmin" value="true"></input>
+      <input type="hidden" name="role_type" value="2"></input>
+    </p>
+    <p class="forgot-password"></p>
+    <!--<p class="forgot-password"><a href="index.html">Forgot your password?</a></p>-->
+  </form>
+
+
+</body>
+</html>

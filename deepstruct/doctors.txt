@@ -1,0 +1,147 @@
+==风湿免疫科==
+1. 全部病历
+select meta(test).id, info[0].record_type, info[0].record_title, info[0].note_info from test where
+	 type = "Record" and info[0].note_info is not null 
+	 and (
+		meta().id like "doctor_13671609763%" or 
+		meta().id like "doctor_13916265159%" or 
+		meta().id like "doctor_13916927066%" or 
+		meta().id like "doctor_13601921066%"
+	 ) order by meta().id;
+
+2. 出院和入院 //info[0].record_type = 1 or 
+select meta(test).id, info[0].record_type, info[0].record_title, info[0].note_info from test where
+	 type = "Record" and info[0].note_info is not null and (info[0].record_type = 5) 
+	 and (
+		meta().id like "doctor_13671609763%" or 
+		meta().id like "doctor_13916265159%" or 
+		meta().id like "doctor_13916927066%" or 
+		meta().id like "doctor_13601921066%"
+	 ) order by meta().id;	
+//info[0].record_type = 1 or 
+select count(*) from test where
+	 type = "Record" and info[0].note_info is not null and (info[0].record_type = 5) 
+	 and (
+		meta().id like "doctor_13671609763%" or 
+		meta().id like "doctor_13916265159%" or 
+		meta().id like "doctor_13916927066%" or 
+		meta().id like "doctor_13601921066%"
+	 ) order by meta().id;	 	  
+[
+  {
+    "department": "风湿免疫科",
+    "name": "徐沪济",
+    "phone_number": "13671609763"
+  },
+  {
+    "department": "风湿免疫科",
+    "name": "李国陵",
+    "phone_number": "13916265159"
+  },
+  {
+    "department": "风湿免疫科",
+    "name": "李挺",
+    "phone_number": "13916927066"
+  },
+  {
+    "department": "风湿免疫科",
+    "name": "姜磊",
+    "phone_number": "13601921066"
+  }
+]
+=============
+
+
+[
+  {
+    "id": "doctor_13816263943",
+    "name": "职康康",
+    "phone_number": "13816263943"
+  },
+  {
+    "id": "doctor_13601921066",
+    "name": "姜磊",
+    "phone_number": "13601921066"
+  },
+  {
+    "id": "doctor_13636694202",
+    "name": "Hitales",
+    "phone_number": "13636694202"
+  },
+  {
+    "id": "doctor_13391236437",
+    "name": "潘泽亚",
+    "phone_number": "13391236437"
+  },
+  {
+    "id": "doctor_13120800696",
+    "name": "金丽娜",
+    "phone_number": "13120800696"
+  },
+  {
+    "id": "doctor_13671609763",
+    "name": "徐沪济",
+    "phone_number": "13671609763"
+  },
+  {
+    "id": "doctor_13916927066",
+    "name": "李挺",
+    "phone_number": "13916927066"
+  },
+  {
+    "id": "doctor_13764079008",
+    "name": "孙亮亮",
+    "phone_number": "13764079008"
+  },
+  {
+    "id": "doctor_13916265159",
+    "name": "李国陵",
+    "phone_number": "13916265159"
+  },
+  {
+    "id": "doctor_13585779545",
+    "name": "叶晨静",
+    "phone_number": "13585779545"
+  },
+  {
+    "id": "doctor_13795352529",
+    "name": "周艳",
+    "phone_number": "13795352529"
+  },
+  {
+    "id": "doctor_13611807893",
+    "name": "杨云",
+    "phone_number": "13611807893"
+  },
+  {
+    "id": "doctor_13764561303",
+    "name": "蒋贝格",
+    "phone_number": "13764561303"
+  },
+  {
+    "id": "doctor_15528398836",
+    "name": "15528398836",
+    "phone_number": "15528398836"
+  },
+  {
+    "id": "doctor_18121226579",
+    "name": "季云瀚",
+    "phone_number": "18121226579"
+  },
+  {
+    "id": "doctor_18221286097",
+    "name": "医生18221286097",
+    "phone_number": "18221286097"
+  },
+  {
+    "id": "doctor_18602162901",
+    "name": "杨云",
+    "phone_number": "18602162901"
+  },
+  {
+    "id": "doctor_18818261617",
+    "name": "Hitales",
+    "phone_number": "18818261617"
+  }
+]
+==

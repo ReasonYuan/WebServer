@@ -1,0 +1,68 @@
+日期+所属锚点: !BriefWordAndHeading(word, nature, pos, foundWord) v !IsDate(pos, word, nature) v DateAndHeading(word, nature, pos, foundWord)
+
+入院日期(未证实): !IsDate(pos1, word1, nature1) v !FindFirstBefore(pos1,IN_SENTENCE,入院日期, null, null, null, foundPos, foundWord, foundNature) v DefaulAdminDate1(pos1,word1, nature1,foundPos)
+入院日期(证实): !DefaulAdminDate1(pos1,word1, nature1,foundPos) v !Follow(foundPos, pos1)  v DefaulAdmissionDate(pos1, word1, nature1)
+出院日期(未证实): !IsDate(pos1, word1, nature1) v !FindFirstBefore(pos1,IN_SENTENCE,出院日期, null, null, null, foundPos, foundWord, foundNature) v DefaulOutAdminDate1(pos1,word1, nature1,foundPos)
+出院日期(证实): !DefaulOutAdminDate1(pos1,word1, nature1,foundPos) v !Follow(foundPos, pos1)  v DefaulOutAdminDate(pos1, word1, nature1)
+
+最大日期: !FindMaxDate(pos, word, nature) v MaxDate(pos, word, nature)
+
+#需要结合上下文的时间: !BriefWord(word, nature, pos) v !HasAttr(pos,isContextDate) v IsContextDate(pos,word,nature)
+#需要结合上下文的日期 DATE_OR_VALUE: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, DATE_OR_VALUE) v IsContextDate(pos,word,nature)
+
+#需要结合上下文的日期 MIDDLE_OF_MONTH: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, MIDDLE_OF_MONTH) v IsContextDate(pos,word,nature)
+#需要结合上下文的日期 BEGIN_OF_MONTH: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, BEGIN_OF_MONTH) v IsContextDate(pos,word,nature)
+#需要结合上下文的日期 END_OF_MONTH: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, END_OF_MONTH) v IsContextDate(pos,word,nature)
+
+需要结合上下文的日期 MONTH_OR_PERIOD: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, MONTH_OR_PERIOD) v IsContextDate(pos,word,nature)
+
+需要结合上下文的日期 YEAR_OR_PERIOD: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, YEAR_OR_PERIOD) v IsContextDate(pos,word,nature)
+
+需要结合上下文的日期 WHAT_IS_NOW: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, WHAT_IS_NOW) v IsNowContextDate(pos,word,nature)
+
+需要结合上下文的日期 WHAT_IS_THAT_DATE: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, WHAT_IS_THAT_DATE) v IsContextDate(pos,word,nature)
+需要结合上下文的日期 WHICH_YEAR: !IsDate(pos, word, nature) v !EqualsAttr(pos, timeformat, WHICH_YEAR) v IsContextDate(pos,word,nature)
+
+需要结合上下文的日期 SOME_TIME_AGO: !DateAndHeading(word, nature, pos, foundWord) v !EqualsAttr(pos, timeformat, SOME_TIME_AGO) v IsContextDateAndHeading(word, nature, pos, foundWord)
+需要结合上下文的日期 SOME_TIME_LATER: !DateAndHeading(word, nature, pos, foundWord) v !EqualsAttr(pos, timeformat, SOME_TIME_LATER) v IsContextDateAndHeading(word, nature, pos, foundWord)
+
+入院记录下"一个月后"等需要参照日期的时间: !IsAdmission(word2) v !IsContextDateAndHeading(word, nature, pos, foundWord) v IsNowContextDate(pos,word,nature)
+
+#出院记录下根据所在段落给"一个月后"等分配参考时间
+出院记录下"一个月后"等参考时间: !IsOutAdmin(word2) v !IsContextDateAndHeading(word, nature, pos, foundWord) v Contains(foundWord, 入院) v IsNowContextDate(pos,word,nature)
+#出院记录下"一个月后"等参考时间: !IsOutAdmin(word2) v !IsContextDateAndHeading(word, nature, pos, foundWord) v !Equals(foundWord,出院医嘱) v IsNowContextDate(pos,word,nature)
+#出院记录下"一个月后"等参考时间: !IsOutAdmin(word2) v !IsContextDateAndHeading(word, nature, pos, foundWord) v !Equals(foundWord,出院时情况) v IsNowContextDate(pos,word,nature)
+
+#出院记录下"一个月后"等参考时间: !IsOutAdmin(word2) v !IsContextDateAndHeading(word, nature, pos, foundWord) v !Equals(foundWord,入院时主要症状和体征) v IsAdmissionContextDate(pos,word,nature)
+出院记录下"一个月后"等参考时间: !IsOutAdmin(word2) v !IsContextDateAndHeading(word, nature, pos, foundWord) v !Contains(foundWord, 入院) v IsAdmissionContextDate(pos,word,nature)
+
+//未定
+#出院记录下"一个月后"等参考时间: !IsOutAdmin(word2) v !IsContextDateAndHeading(word, nature, pos, foundWord) v !Equals(foundWord,诊治情况) v IsNowContextDate(pos,word,nature)
+#出院记录下"一个月后"等参考时间: !IsOutAdmin(word2) v !IsContextDateAndHeading(word, nature, pos, foundWord) v !Equals(foundWord,主要化验结果及检查) v IsNowContextDate(pos,word,nature)
+
+
+
+存在入院日期时入院记录的参考时间: !IsAdmission(word2) v !DefaulAdmissionDate(pos1, word1, nature1) v RefAdmissionDate(pos1, word1, nature1)
+出院记录锚点存在出院字段时的参考日期: !IsOutAdmin(word2) v !DefaulOutAdminDate(pos1, word1, nature1) v RefOutAdminDate(pos1, word1, nature1)
+出院记录锚点存在入院字段时的参考日期: !IsOutAdmin(word2) v !DefaulAdmissionDate(pos1, word1, nature1) v RefOutAdminDate2(pos1, word1, nature1)
+
+不存在入院日期时入院记录的参考时间: !IsAdmission(word2) v HaveInTimeWord(入院日期, null, SOME_TAG) v !MaxDate(pos1, word1, nature1) v RefAdmissionDate(pos1, word1, nature1)
+出院记录锚点存在出院字段时,但不存在出院日期时的参考日期: !IsOutAdmin(word2) v HaveOutTimeWord(出院日期, null, SOME_TAG) v !MaxDate(pos1, word1, nature1) v RefOutAdminDate(pos1, word1, nature1)
+出院记录锚点存在入院字段时,但不存在入院日期时的参考日期: !IsOutAdmin(word2) v HaveInTimeWord(入院日期, null, SOME_TAG) v !MaxDate(pos1, word1, nature1) v RefOutAdminDate2(pos1, word1, nature1)
+
+入院记录目前、至今的参考时间: !IsNowContextDate(pos,word,nature) v !RefAdmissionDate(pos1, word1, nature1) v ContextDate(pos, pos1, word1, nature1)
+出院记录目前、至今的参考时间和锚点中存在入院字段的参考时间: !IsNowContextDate(pos,word,nature) v !RefOutAdminDate(pos1, word1, nature1) v ContextDate(pos, pos1, word1, nature1)
+
+出院记录锚点存在入院字段的参考时间: !IsAdmissionContextDate(pos,word,nature) v !RefOutAdminDate2(pos1, word1, nature1) v ContextDate(pos, pos1, word1, nature1)
+
+
+
+普通上下文时间参照之前第一个时间: !IsContextDate(pos,word,nature) v !FindFirstBefore(pos, IN_SECTION, null, Date, timestamp, null, foundPos, foundWord, foundNature) v ContextDate(pos, foundPos, foundWord, foundNature)
+
+
+普通上下文时间参照之前第一个时间: !IsContextDate(pos,word,nature) v FindFirstBefore(pos, IN_SECTION, null, Date, timestamp, null, foundPos, foundWord, foundNature) v IsNowContextDate(pos,word,nature)
+
+
+
+
+

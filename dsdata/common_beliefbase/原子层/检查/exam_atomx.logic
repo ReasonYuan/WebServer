@@ -1,0 +1,17 @@
+//将带有数值单位的检查项划分为化验项
+将检查项转化为化验项:!IsExam(word1, nature1, pos1, sentencePos, heading) v !IsVVn(word2, nature2, pos2, word3, nature3, pos3, sentencePos) v !AfterWithin(pos1, pos2, 2) v !OnlyWordBetween("：", Punc, pos1, pos2) v IsTestItem(word1,nature1,pos1, sentencePos1,heading)
+
+//将带有排比形式的化验项转换为检查项，如x1、y、x2，x1、x2属于检查项，y属于化验项
+将化验项之后有检查项:!IsTestItem(word1, nature1, pos1, sentencePos, heading) v !FindFirstAfter(pos1,IN_SECTION, null, Exam, null, null,foundPos,foundWord,foundNature) v TagExamZ(word1, nature1, pos1,foundWord, foundPos, sentencePos, heading)
+
+标记化验项与之后的检查项之间仅有顿号:!TagExamZ(word1, nature1, pos1,foundWord, foundPos, sentencePos, heading) v !OnlyWordBetween("、", Punc, pos1, foundPos) v TagExamAndPunc(word1, nature1, pos1,foundWord, foundPos, sentencePos, heading) 
+
+
+标记化验项之前有检查项:!IsTestItem(word1, nature1, pos1, sentencePos, heading) v !FindFirstBefore(pos1,IN_SECTION, null, Exam, null, null,foundPos,foundWord,foundNature) v TagExamAndTest(word1, pos1, foundWord, foundPos, sentencePos, heading)
+
+标记化验项与之前的检查项之间仅有顿号:!TagExamAndTest(word1, pos1,foundWord, foundPos, sentencePos, heading) v !OnlyWordBetween("、", Punc, foundPos, pos1) v TagExamAndTestp(foundWord, foundPos, sentencePos, heading)
+
+将化验项转化为检查项:!TagExamAndPunc(word1, nature1,pos1, foundWord1, foundPos1, sentencePos, heading) v !TagExamAndTestp(foundWord2, foundPos2, sentencePos, heading) v !AfterWithin(foundPos2, foundPos1, 4) v ReExam(word1, nature1, pos1, sentencePos, heading)
+
+
+

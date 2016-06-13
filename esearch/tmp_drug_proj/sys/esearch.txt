@@ -1,0 +1,25 @@
+#入院
+exists word(入院日期).skip(1-).nature(时间) => evidence(SentenceTells/SENTENCE_POS/ST_ADMINSSION_DATE).tag(st1)
+
+#出院
+exists word(出院日期).skip(1-).nature(时间) => evidence(SentenceTells/SENTENCE_POS/ST_DISCHARGE_DATE).tag(st2)
+
+#化验
+exists nature(化验项).skip(1-).nature(数值).skip(1-).nature(数值单位) => evidence(SentenceTells/SENTENCE_POS/ST_TEST_ITEM).tag(st3)
+
+#治疗、药物使用情况
+exists nature(行为动词).nature(用药).nature(数值).nature(数值单位) => evidence(SentenceTells/SENTENCE_POS/ST_TREATMENT).tag(st4)
+exists nature(用药).nature(趋向动词).nature(数值).nature(数值单位) => evidence(SentenceTells/SENTENCE_POS/ST_TREATMENT).tag(st5)
+
+#病人检查的情况
+exists word(查).nature(检查项) => evidence(SentenceTells/SENTENCE_POS/ST_EXAM_RESULT).tag(st6)
+
+#病人的病况
+exists nature(存在动词).skip(1-).nature(症状) => evidence(SentenceTells/SENTENCE_POS/ST_DESEASE).tag(st6)
+exists word(无).skip(1-).nature(症状) => evidence(SentenceTells/SENTENCE_POS/ST_DESEASE).tag(st7)
+exists word(否认).skip(1-).nature(诊断) => evidence(SentenceTells/SENTENCE_POS/ST_DESEASE).tag(st8)
+exists nature(部位).skip(5-).nature(症状) => evidence(SentenceTells/SENTENCE_POS/ST_DESEASE).tag(st9)
+
+#事件发生时间
+exists nature(时间) => evidence(HaveDateInSentence/SENTENCE_POS).tag(st10)
+!exists nature(时间) => evidence(!HaveDateInSentence/SENTENCE_POS).tag(st101)

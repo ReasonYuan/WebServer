@@ -1,0 +1,38 @@
+#描述
+#exists nature(POS_VALUE:数值).skip(2-).nature(POS_VALUEUNIT:数值单位).skip(3-|!nature=[趋向动词]) => evidence(Des1/POS_VALUE/POS_VALUEUNIT/ST_TEST_ITEM).tag(描述)
+
+
+#exists nature(POS_VALUE:数值).skip(2-).nature(POS_VALUEUNIT:数值单位).skip(1-).nature(POS_VERB:趋向动词) => evidence(Des11/POS_VALUE/POS_VALUEUNIT/POS_VERB/ST_TEST_ITEM).tag(描述)
+
+
+#exists nature(POS_VALUE:数值).nature(POS_VALUEUNIT:数值单位).skip(3-|!nature=[趋向动词]) => evidence(Des111/POS_VALUE/POS_VALUEUNIT/ST_TEST_ITEM).tag(描述)
+
+
+#exists nature(POS_RESULT:检查结果) => evidence(Des2/POS_RESULT/ST_CHEACK_ITEM).tag(描述)
+
+
+#exists word(POS_DES:阴性) => evidence(Des3/POS_DES/ST_TEST_ITEM).tag(描述)
+
+
+#exists word(POS_DES:阳性) => evidence(Des4/POS_DES/ST_TEST_ITEM).tag(描述)
+
+
+#exists nature(POS_VALUE:数值).skip(3-|!nature=[数值单位]) => evidence(Des5/POS_VALUE/ST_TEST_ITEM).tag(描述)
+
+
+#exists word(POS_DES:无).skip(*).word(POS_ZHENGZHUANG:诱因) => evidence(Des3/POS_DES/POS_ZHENGZHUANG/ST_TEST_ITEM).tag(描述)
+
+
+#exists word(POS_DES:因).skip(*).nature(POS_ZHENGZHUANG:症状) => evidence(Des3/POS_DES/POS_ZHENGZHUANG/ST_TEST_ITEM).tag(描述)
+
+
+
+
+
+
+
+
+
+
+
+

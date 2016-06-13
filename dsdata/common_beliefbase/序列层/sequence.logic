@@ -1,0 +1,18 @@
+
+//数值+单位序列与数值+单位+异常序列有重复
+//数值+单位序列
+数值+单位: !IsValue(word1, nature1, pos1, sentencePos) v !IsValueUnit(word2, nature2, pos2, sentencePos) v !AfterWithin(pos1, pos2, 2) v IsVVn(word1, nature1, pos1, word2, nature2, pos2, sentencePos)
+//数值+单位+异常序列
+数值+单位+异常: !IsVVn(word1, nature1, pos1, word2, nature2, pos2, sentencePos) v FindAround(pos2, ~1, ；, null, null, null, foundPos, foundWord, foundNature) v !IsDirVerb(word3, nature3, pos3, sentencePos) v !AfterWithin(pos2, pos3, 2) v IsVVnD(word1, nature1, pos1, word2, nature2, pos2, word3, nature3, pos3, sentencePos,foundPos, foundWord, foundNature)
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+
+标记化验所属时间: !IsTestItem(word1, nature1, pos1, sentecePos, heading) v !FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+
+标记无日期的化验项: !IsTestItem(word1, nature1, pos1, sentecePos, heading) v FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v NoTimeTagDate(pos1, word1, null, null, null, nature1, heading)
+
+标记化验项的值: !ReTestItem(word1, nature1, pos1, sentecePos, heading) v !FindFirstAfter(pos1,IN_SENTENCE,null,Value,null,null,foundPos,foundWord,foundNature) v TagTestValue(pos1,word1,foundPos,foundWord,foundNature，nature1)
+
+#标记排比化验项: !PaiBiTestItem(pos1, word1, nature1, pos2, word2, nature2) v !TagDate(pos3, word3, pos2, word2, nature2, nature3) v TagDate(pos3, word3, pos1, word1, nature1, nature3)
+
+//判断需要提取的段落
+化验项+描述: !ReTestItem(word, nature, pos, sentecePos, heading) v !TestItemDes(word1, nature1, pos1, word2, nature2, pos2, word3, nature3, pos3) v !Equals(heading,history_of_present_illness) v !AfterWithin(pos, pos1, 3) v TestItemAndDes(word, nature, pos, word1, nature1, pos1, word2, nature2, pos2, word3, nature3, pos3, sentecePos, heading)
+
+给排比化验项+描述: !PaiBiTestItem(word1, nature1, pos1, word2, nature2, pos2, sentecePos, heading) v !TestItemAndDes(word2, nature2, pos2, word3, nature3, pos3, word4, nature4, pos4, word5, nature5, pos5, sentecePos, heading) v TestItemAndDes(word1, nature1, pos1, word1, nature1, pos1, word2, nature2, pos2, word3, nature3, pos3, sentecePos, heading)
+
+
+
+
+
+
+
+
+

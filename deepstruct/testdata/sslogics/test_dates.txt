@@ -1,0 +1,5 @@
+#时间长度加上“前、后”就变成了时间
+exists nature(X:时间长度).word(Y:前) => combine(X+Y=时间).tag(tag17)
+exists nature(X:时间长度).word(Y:后) => combine(X+Y=时间).tag(tag18)
+exists nature(X:时间长度).word(Y:余).word(Z:前) => combine(X+Y+Z=时间).tag(tag19)
+exists nature(X:时间长度).word(Y:余).word(Z:后) => combine(X+Y+Z=时间).tag(tag20)

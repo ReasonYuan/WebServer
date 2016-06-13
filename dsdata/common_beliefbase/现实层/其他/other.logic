@@ -1,0 +1,7 @@
+//给无时间TageDate标记时间
+入院记录无日期TageDate处理:!NoTimeTagDate(pos1, word1, null, null, null, nature1, heading) v !IsAdmission(word2) v !RefAdmissionDate(foundPos, foundWord, foundNature) v  TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+出院记录无日期TageDate处理:!NoTimeTagDate(pos1, word1, null, null, null, nature1, heading) v !Contains(heading,出院) v !IsOutAdmin(word2) v !RefOutAdminDate(foundPos, foundWord, foundNature) v  TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+出院记录无日期TageDate处理:!NoTimeTagDate(pos1, word1, null, null, null, nature1, heading) v Contains(heading,入院) v Contains(heading,出院) v !IsOutAdmin(word2) v !RefOutAdminDate(foundPos, foundWord, foundNature) v  TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+出院记录无日期TageDate处理:!NoTimeTagDate(pos1, word1, null, null, null, nature1, heading) v !Contains(heading,入院) v !IsOutAdmin2(word2) v !RefOutAdminDate2(foundPos, foundWord, foundNature) v  TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+
+标记排比日期: !PaiBiDate(pos1, word1, nature1, pos2, word2, nature2) v !TagDate(pos3, word3, pos2, word2, nature2, nature3) v TagDate(pos3, word3, pos1, word1, nature1, nature3)

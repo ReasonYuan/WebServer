@@ -1,0 +1,19 @@
+
+标记诊断所属日期: !IsDiag(word1, nature1, pos1, sentencePos, heading) v !FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+
+标记无日期的症状: !IsDiag(word1, nature1, pos1, sentencePos, heading) v FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v NoTimeTagDate(pos1, word1, null, null, null, nature1, heading)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

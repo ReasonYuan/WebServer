@@ -1,0 +1,35 @@
+
+
+//化验项只存在数值的序列
+数值: !IsTestItemValue(word1, nature1, pos1, sentencePos) v FindAround(pos1, ~2, null, ValueUnit, null, null, foundPos, foundWord, foundNature) v IsNoUnitTestValue(word1, nature1, pos1)
+
+//所有化验项的数值+单位序列
+数值+单位: !IsTestItemValue(word1, nature1, pos1, sentencePos) v !IsTestItemValueUnit(word2, nature2, pos2, sentencePos) v !AfterWithin(pos1, pos2, 3) v IsTestItemVVn(word1, nature1, pos1, word2, nature2, pos2, sentencePos)
+
+//只存在数值+单位的序列
+数值+单位: !IsTestItemVVn(word1, nature1, pos1, word2, nature2, pos2, sentencePos) v FindAround(pos2, ~3, null, DirVerb, null, null, foundPos, foundWord, foundNature) v IsNoDTestItemVVn(word1, nature1, pos1, word2, nature2, pos2)
+数值+单位: !IsTestItemVVn(word1, nature1, pos1, word2, nature2, pos2, sentencePos) v !FindAround(pos2, ~2, ；, null, null, null, foundPos, foundWord, foundNature) v IsNoDTestItemVVn(word1, nature1, pos1, word2, nature2, pos2)
+
+//化验项的数值+单位+异常序列
+数值+单位+异常: !IsTestItemVVn(word1, nature1, pos1, word2, nature2, pos2, sentencePos) v !IsTestItemDirVerb(word3, nature3, pos3, sentencePos) v !AfterWithin(pos2, pos3, 2) v IsTestItemVVnD(word1, nature1, pos1, word2, nature2, pos2, word3, nature3, pos3)
+
+
+//只存在趋向动词的化验项的异常序列
+异常: !ReTestItem(word1, nature1, pos1, sentencePos, heading) v !IsTestItemDirVerb(word2, nature2, pos2, sentencePos) v !AfterWithin(pos1, pos2, 2) v IsTestItemD(word2, nature2, pos2)
+
+//排比化验序列
+查找需要的排比化验项: !IsTestItem(word1, nature1, pos1, sentecePos, heading) v !IsTestItem(word2, nature2, pos2, sentecePos, heading) v !OnlyWordBetween(、, Punc, pos1, pos2) v PaiBiTestItem(word1, nature1, pos1, word2, nature2, pos2, sentecePos, heading)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

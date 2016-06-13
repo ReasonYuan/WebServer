@@ -1,0 +1,44 @@
+
+#把错误识别的化验项转换成检查项
+exists nature(标点符号).skip(X:1-).nature(Y:化验项).word(\:,nature(标点符号)).nature(化验项).skip(1-).nature(数值) => combine(X+Y=检查项)
+#把错误未识别的转换成检查项
+exists nature(时间).skip(1-).nature(X:未识别).word(\:,nature(标点符号)).nature(化验项).skip(1-).nature(数值) => combine(X=检查项)
+#把错误未识别的转换成检查项
+exists word(查).nature(X:未识别).skip(*).nature(部位) => combine(X=检查项)
+
+#把错误未识别的出院／入院诊断里的诊断提取出来
+#1. 连续两个诊断，一般为并发诊断
+exists nature(数值).nature(X:诊断).nature(Y:诊断).nature(数值) => combine(X+Y=诊断)
+#2. 最后一项
+exists nature(数值).nature(诊断).nature(数值).nature(X:未识别).skip(X:1-).end => combine(X=诊断)
+
+#补全用药
+exists nature(行为动词).nature(X:未识别).nature(数值).nature(数值单位) => combine(X=用药)
+exists nature(行为动词).nature(X:化验项).nature(Y:未识别).nature(标点符号).skip(*).nature(用药).nature(治疗行为)  => combine(X+Y=用药)
+exists nature(标点符号).nature(X:未识别).skip(Y:1-).nature(Z:未识别).nature(治疗行为).nature(标点符号).skip(*).nature(用药).nature(治疗行为)  => combine(X+Y+Z=用药)
+
+#书名号里的全部是一个词，暂定为未定义
+exists word(《).skip(X:*).word(》) => combine(X=未定义)
+
+#部位量词后的未识别＋症状应该是部位: 右/部位量词 | 肾囊/未识别 | 肿/症状
+exists nature(部位量词).nature(X:未识别).nature(症状) => combine(X=部位)
+
+
+#=====下面全部是临时的debug=======
+
+After1=
+
+#exists word(予, nature(行为动词)).skip(X:3-).nature(治疗行为).nature(标点符号).nature(用药).nature(治疗行为)  => combine(X=用药)
+
+#exists skip(1+).nature(用药).nature(治疗行为) | !before nature(数值).skip(1+).nature(标点符号) => combine(X=用药)
+#around nature(用药).nature(治疗行为)
+
+#补全用药
+#exists nature(行为动词).skip(X:1-).nature(Y:化验项).word(\:,nature(标点符号)).nature(化验项) => combine(X+Y=检查项)
+
+
+＃!exists nature(数值).word(史蒂夫, nature(动词))..nature(名词) | !before ..nature(症状) | after ..nature(症状).word(于, nature(用药)) | around ..nature(时间).word(于, nature(用药))
+
+
+#!exists nature(数值).nature(数值)
+# => update(X+Y=检查项)

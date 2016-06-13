@@ -1,0 +1,60 @@
+#入院
+exists word(入院日期).skip(1-).nature(时间) => evidence(SentenceTells/SENTENCE_POS/ST_ADMINSSION_DATE).tag(st1)
+
+#出院
+exists word(出院日期).skip(1-).nature(时间) => evidence(SentenceTells/SENTENCE_POS/ST_DISCHARGE_DATE).tag(st2)
+
+#化验
+exists nature(化验项).skip(1-).nature(数值).skip(1-).nature(数值单位) => evidence(SentenceTells/SENTENCE_POS/ST_TEST_ITEM).tag(st3)
+
+#治疗、药物使用情况
+exists nature(行为动词).nature(用药).nature(数值).nature(数值单位) => evidence(SentenceTells/SENTENCE_POS/ST_TREATMENT).tag(st4)
+exists nature(用药).nature(趋向动词).nature(数值).nature(数值单位) => evidence(SentenceTells/SENTENCE_POS/ST_TREATMENT).tag(st5)
+
+#病人检查的情况
+exists word(查).nature(检查项) => evidence(SentenceTells/SENTENCE_POS/ST_EXAM_RESULT).tag(st6)
+
+#病人的病况
+exists nature(存在动词).skip(1-).nature(症状) => evidence(SentenceTells/SENTENCE_POS/ST_DESEASE).tag(st6)
+exists word(无).skip(1-).nature(症状) => evidence(SentenceTells/SENTENCE_POS/ST_DESEASE).tag(st7)
+exists word(否认).skip(1-).nature(诊断) => evidence(SentenceTells/SENTENCE_POS/ST_DESEASE).tag(st8)
+exists nature(部位).skip(5-).nature(症状) => evidence(SentenceTells/SENTENCE_POS/ST_DESEASE).tag(st9)
+
+#事件发生时间
+exists nature(时间) => evidence(HaveDateInSentence/SENTENCE_POS).tag(st10)
+!exists nature(时间) => evidence(!HaveDateInSentence/SENTENCE_POS).tag(st101)
+
+//用药证据查询
+//用药剂量、用药频次, 剂量和频次分开查证，因为中间skip了1-，不能保证skip掉的需要后面的频次的数值与否
+//用药剂量
+exists nature(POS_DRUG:用药).skip(3-|!nature=[数值,数值单位]).nature(POS_JILIANG_VALUE:数值).nature(POS_JILIANG_UNIT:数值单位) => evidence(HaveDrugJiLiangAt?/POS_DRUG/POS_JILIANG_VALUE/POS_JILIANG_UNIT).tag(用药剂量)
+exists nature(POS_DRUG:用药).skip(3-).nature(POS_JILIANG_VALUE:数值).nature(POS_JILIANG_UNIT:数值单位).skip(1-).nature(数值).nature(数值单位) => evidence(HaveDrugJiLiangAt?/POS_DRUG/POS_JILIANG_VALUE/POS_JILIANG_UNIT).tag(用药剂量)
+exists nature(POS_DRUG:用药).skip(3-).nature(POS_JILIANG_VALUE:数值单位) => evidence(HaveDrugJiLiangAt?/POS_DRUG/POS_JILIANG_VALUE/null).tag(用药剂量)
+exists nature(POS_DRUG:用药).skip(3-).nature(POS_JILIANG_VALUE:数值) => evidence(HaveDrugJiLiangAt?/POS_DRUG/POS_JILIANG_VALUE/null).tag(用药剂量)
+//用药频次
+exists nature(POS_DRUG:用药).skip(3-).nature(数值).nature(数值单位).skip(3-|!nature=[用药]).nature(POS_PINCI_VALUE:数值).nature(POS_PINCI_UNIT:数值单位) => evidence(HaveDrugPinciAt?/POS_DRUG/POS_PINCI_VALUE/POS_PINCI_UNIT).tag(用药频次)
+exists nature(POS_DRUG:用药).skip(3-).nature(数值).nature(数值单位).skip(3-|!nature=[用药]).nature(POS_PINCI_UNIT:数值单位) => evidence(HaveDrugPinciAt?/POS_DRUG/null/POS_PINCI_UNIT).tag(用药频次)
+exists nature(POS_DRUG:用药).skip(3-).nature(数值单位).skip(3-|!nature=[用药]).nature(POS_PINCI_UNIT:数值单位) => evidence(HaveDrugPinciAt?/POS_DRUG/null/POS_PINCI_UNIT).tag(用药频次)
+exists nature(POS_DRUG:用药).skip(3-).nature(数值单位).skip(3-|!nature=[用药]).nature(POS_PINCI_VALUE:数值).nature(POS_PINCI_UNIT:数值单位) => evidence(HaveDrugPinciAt?/POS_DRUG/POS_PINCI_VALUE/POS_PINCI_UNIT).tag(用药频次)
+exists nature(POS_DRUG:用药).skip(3-).nature(数值).skip(3-|!nature=[用药]).nature(POS_PINCI_UNIT:数值单位) => evidence(HaveDrugPinciAt?/POS_DRUG/null/POS_PINCI_UNIT).tag(用药频次)
+exists nature(POS_DRUG:用药).skip(3-).nature(数值).skip(3-|!nature=[用药]).nature(POS_PINCI_VALUE:数值).nature(POS_PINCI_UNIT:数值单位) => evidence(HaveDrugPinciAt?/POS_DRUG/POS_PINCI_VALUE/POS_PINCI_UNIT).tag(用药频次)
+//用药效果的证据, 1: 不好的效果
+exists nature(POS_DRUG:用药).skip(*).word(POS_EFFECTS1:欠佳) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果1)
+exists nature(POS_DRUG:用药).skip(*).word(POS_EFFECTS1:不佳) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果2)
+exists nature(POS_DRUG:用药).skip(*).word(POS_EFFECTS1:无效) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果3)
+exists nature(POS_DRUG:用药).skip(*).nature(POS_EFFECTS1:否定词).skip(1-).word(POS_EFFECTS2:改善) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/POS_EFFECTS2/null).tag(用药效果4)
+exists nature(POS_DRUG:用药).skip(*).nature(POS_EFFECTS1:否定词).skip(1-).word(POS_EFFECTS2:好转) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/POS_EFFECTS2/null).tag(用药效果5)
+exists nature(POS_DRUG:用药).skip(*).nature(POS_EFFECTS1:否定词).skip(1-).word(POS_EFFECTS2:缓解) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/POS_EFFECTS2/null).tag(用药效果6)
+exists nature(POS_DRUG:用药).skip(*).word(POS_EFFECTS1:改善).nature(POS_EFFECTS2:否定词) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/POS_EFFECTS2/null).tag(用药效果44)
+exists nature(POS_DRUG:用药).skip(*).word(POS_EFFECTS1:好转).nature(POS_EFFECTS2:否定词) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/POS_EFFECTS2/null).tag(用药效果55)
+exists nature(POS_DRUG:用药).skip(*).word(POS_EFFECTS1:缓解).nature(POS_EFFECTS2:否定词) => evidence(HaveDrugBadEffects/POS_DRUG/POS_EFFECTS1/POS_EFFECTS2/null).tag(用药效果66)
+//用药效果的证据, 2: 好的效果
+exists nature(POS_DRUG:用药).skip(*|!nature=否定词).word(POS_EFFECTS1:好转).nature(标点符号) => evidence(HaveDrugGoodEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果7)
+exists nature(POS_DRUG:用药).skip(*|!nature=否定词).word(POS_EFFECTS1:缓解).nature(标点符号) => evidence(HaveDrugGoodEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果8)
+exists nature(POS_DRUG:用药).skip(*|!nature=否定词).word(POS_EFFECTS1:改善).nature(标点符号) => evidence(HaveDrugGoodEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果9)
+exists nature(POS_DRUG:用药).skip(*|!nature=否定词).word(POS_EFFECTS1:好转).nature(时间副词) => evidence(HaveDrugGoodEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果77)
+exists nature(POS_DRUG:用药).skip(*|!nature=否定词).word(POS_EFFECTS1:缓解).nature(时间副词) => evidence(HaveDrugGoodEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果88)
+exists nature(POS_DRUG:用药).skip(*|!nature=否定词).word(POS_EFFECTS1:改善).nature(时间副词) => evidence(HaveDrugGoodEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果99)
+
+
+

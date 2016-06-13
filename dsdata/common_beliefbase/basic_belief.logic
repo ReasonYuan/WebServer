@@ -1,0 +1,92 @@
+#
+#
+#Build in predicates
+After(x, y)
+Follow(pos1, pos2)
+
+#evidences
+Word(word, nature, pos, sentencePos, blockPos, recordPos)
+
+#inherence predicates
+HaveDateInSentence(pos)
+SentenceTells(pos, content)
+
+SameConceptSentences(pos1, refPos, content)
+DateRefToSentence(pos, refPos)
+
+//用药剂量的查询可疑证据
+HaveDrugJiLiangAt?(posOfDrug, posOfValue, posOfUnit)
+//用药频次的查询可疑证据
+HaveDrugPinciAt?(posOfDrug, posOfValue, posOfUnit)
+//用药不好的效果
+HaveDrugBadEffects(posOfDrug, posKeyWord1, posKeyWord2, posKeyWord3)
+//用药好的效果
+HaveDrugGoodEffects(posOfDrug, posKeyWord1, posKeyWord2, posKeyWord3)
+//所有的症状+部位+部位量词
+@AllSymptom(sentencePos, heading, word, nature, pos,word1, nature1, pos1, word2, nature2, pos2)
+//所有的检查项+所见所示
+@ReExamIndicateQC(word, pos, sentencePos, heading, foundText)
+$ReExamIndicatewxx(word, pos, sentencePos, heading, foundText, compared)
+
+@AllRightDrug(word,word1, word2,word3,word4,nature, pos,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, heading)
+
+Des1(pos1,pos2,ST_TEST_ITEM)
+
+
+#是日期
+IsDate(pos, date, nature) 
+#引用日期
+RefDate(pos, refPos, date)
+#是标题
+IsHeading(pos)
+#应该参考当时出院日期
+RefDischargeDate(pos)
+#出院日期
+DischargeDate(pos, date)
+#简写词，方便书写逻辑
+BriefWord(word, nature, pos)
+
+#测试FindSequence: !BriefWord(word, nature, pos) v !Equals(nature, TestItem) v !FindSequence(pos, IN_SENTENCE, search_item.txt, foundPos1, foundPos2, foundPos3) v TestItemAndDes(pos,foundPos1, foundPos2, foundPos3)
+
+//基础逻辑
+简写词: !Word(word, nature, pos, sentencePos, blockPos, recordPos) v BriefWord(word, nature, pos)
+不是标题: !Word(word, nature, pos, sentencePos, blockPos, recordPos) v Equals(nature, Heading) v !IsHeading(pos)
+给简写词标Heading: !Word(word, nature, pos, sentencePos, blockPos, recordPos) v !FindFirstBefore(pos, IN_SECTION, null, Heading, null, null, foundPos, foundWord, foundNature) v BriefWordAndHeading(word, nature, pos, foundWord)
+给词标+Heading: !Word(word, nature, pos, sentencePos, blockPos, recordPos) v !FindFirstBefore(pos, IN_SECTION, null, Heading, null, null, foundPos, foundWord, foundNature) v WordAndHeading(word, nature, pos, sentencePos, foundWord)
+
+
+
+
+//判断记录类型
+记录类型: !BriefWord(word1, nature1, pos1) v !Equals(word1, "record_title") v !BriefWord(word2, nature2, pos2) v !Follow(pos1, pos2) v RecordType(word2, nature2, pos2)
+是入院记录: !RecordType(word2, nature2, pos2) v !Equals(word2, "入院记录") v IsAdmission(word2)
+是入院记录: !RecordType(word2, nature2, pos2) v !Equals(word2, "入院") v IsAdmission(word2)
+是出院记录: !RecordType(word2, nature2, pos2) v !Equals(word2, "出院记录") v IsOutAdmin(word2)
+是出院记录: !RecordType(word2, nature2, pos2) v !Equals(word2, "出院") v IsOutAdmin(word2)
+
+
+
+//判断记录时间是否存在
+入院日期存在: !ExistWord(入院日期, null, null, null, foundPos, foundWord, foundNature) v ExistsInTimeWord(foundPos, foundWord, foundNature)
+入院日期不存在: ExistWord(入院日期, null, null, null, foundPos, foundWord, foundNature) v !HaveInTimeWord(入院日期, null, SOME_TAG)
+出院日期存在: !ExistWord(出院日期, null, null, null, foundPos, foundWord, foundNature) v ExistsOutTimeWord(foundPos, foundWord, foundNature)
+出院日期不存在: ExistWord(出院日期, null, null, null, foundPos, foundWord, foundNature) v !HaveOutTimeWord(出院日期, null, SOME_TAG)
+
+
+//之前为王曦那边的工程做的
+标记有日期症状: !TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1) v FinalTagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+标记有日期用药: !TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1) v FinalTagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+标记有日期检查项: !TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1) v FinalTagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+标记无日期症状: !BriefWord(word1, nature1, pos1) v !Equals(nature1, Symptom) v FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v !EndTagDate(pos1, word1, null, null, null, nature1)
+标记无日期用药: !BriefWord(word1, nature1, pos1) v !Equals(nature1, Drug) v FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v !EndTagDate(pos1, word1, null, null, null, nature1)
+标记无日期检查项: !BriefWord(word1, nature1, pos1) v !Equals(nature1, Exam) v FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v !EndTagDate(pos1, word1, null, null, null, nature1)
+
+
+查找排比日期: !IsDate(pos1, word1, nature1) v !IsDate(pos2, word2, nature2) v !OnlyWordBetween(null, Punc, pos1, pos2) v PaiBiDate(pos1, word1, nature1, pos2, word2, nature2)
+#标记排比日期: !BriefWord(word0, nature0, pos0) v !Equals(nature0, Date) v !TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1) v !OnlyWordBetween(null, Punc, pos0, foundPos) v !TagDate(pos1, word1, word0, nature0, pos0)
+
+
+
+
+
+

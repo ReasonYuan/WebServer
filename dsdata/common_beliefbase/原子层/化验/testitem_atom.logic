@@ -1,0 +1,26 @@
+
+//需要的化验项原子
+需要的化验原子: !IsTestItem(word, nature, pos, sentencePos, heading) v !IsValue(word2, nature2, pos2, sentencePos) v !AfterWithin(pos, pos2, 3) v ReTestItem(word, nature, pos, sentencePos, heading)
+需要的化验原子: !IsTestItem(word, nature, pos, sentencePos, heading) v !IsDirVerb(word2, nature2, pos2, sentencePos) v !AfterWithin(pos, pos2, 2) v ReTestItem(word, nature, pos, sentencePos, heading)
+
+//化验数值原子
+是化验数值: !ReTestItem(word1, nature1, pos1, sentencePos, heading) v !IsValue(word2, nature2, pos2, sentencePos) v !AfterWithin(pos1, pos2, 3) v IsTestItemValue(word2, nature2, pos2, sentencePos)  
+
+//化验数值单位原子
+是化验数值单位: !IsTestItemValue(word1, nature1, pos1, sentencePos) v !IsValueUnit(word2, nature2, pos2, sentencePos) v !AfterWithin(pos1, pos2, 2) v IsTestItemValueUnit(word2, nature2, pos2, sentencePos)
+
+//化验趋向动词原子
+是化验趋向动词: !IsTestItemValueUnit(word1, nature1, pos1, sentencePos) v FindAround(pos1, ~1, ；, null, null, null, foundPos, foundWord, foundNature) v !IsDirVerb(word2, nature2, pos2, sentencePos) v !AfterWithin(pos1, pos2, 2) v IsTestItemDirVerb(word2, nature2, pos2, sentencePos)
+是化验趋向动词: !ReTestItem(word1, nature1, pos1, sentencePos, heading) v !IsDirVerb(word2, nature2, pos2, sentencePos) v !AfterWithin(pos1, pos2, 2) v IsTestItemDirVerb(word2, nature2, pos2, sentencePos)
+
+
+
+
+
+
+
+
+
+
+
+

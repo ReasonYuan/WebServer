@@ -1,0 +1,50 @@
+
+
+//出现关键字
+出现关键字: !IsExists(word, nature, pos, sentencePos) v !Equals(word, 出现) v ReExist(word, nature, pos, sentencePos)
+
+出现关键字: !WordAndHeading(word, nature, pos, sentencePos, heading) v !Equals(word, 再发) v ReExist(word, nature, pos, sentencePos)
+
+
+
+//伴随症状关键词
+伴随症状关键字: !IsLinkConj(word, nature, pos, sentencePos) v !Equals(word, 伴) v IsBan(word, nature, pos, sentencePos)
+
+伴随症状关键字: !IsLinkConj(word, nature, pos, sentencePos) v !Equals(word, 伴随) v IsBan(word, nature, pos, sentencePos)
+
+伴随症状关键字: !IsLinkConj(word, nature, pos, sentencePos) v !Equals(word, 伴有) v IsBan(word, nature, pos, sentencePos)
+
+
+
+//诱因关键词
+//Word"诱因"
+Word"诱因": !WordAndHeading(word, nature, pos, sentencePos, heading) v !Equals(word, 诱因) v Cause(word, nature, pos, sentencePos)
+
+无明显诱因起始: !Cause(word, nature, pos, sentencePos) v !FindFirstBefore(pos, IN_SECTION, null, WordNo, null, null, foundPos, foundWord, foundNature) v YouyinQS(foundPos, pos,sentencePos)
+
+
+
+
+
+//出现后面的症状
+出现的症状: !ReExist(word, nature, pos, sentencePos) v !FindFirstAfter(pos, IN_SENTENCE, null, Symptom, null, null, foundPos, foundWord, foundNature) v TmpSymptom(foundWord, foundNature, foundPos, sentencePos,heading)
+
+
+//症状前没出现WordNo
+没有说无的症状: !IsSymptom(word, nature, pos, sentencePos, heading) v FindFirstBefore(pos, IN_SENTENCE, null, WordNo, null, null, foundPos, foundWord, foundNature) v TmpSymptom2(word, nature, pos, sentencePos, heading)
+
+//症状前出现WordNo
+有WordNo的症状: !IsSymptom(word, nature, pos, sentencePos, heading) v !FindFirstBefore(pos, IN_SENTENCE, null, WordNo, null, null, foundPos, foundWord, foundNature) v TmpSymptom3(word, nature, pos, sentencePos, heading, foundPos)
+
+//判断WordNo的症状之间存在，:存在问题
+判断WordNo是否为真,存在“，”为症状: !TmpSymptom3(word, nature, pos, sentencePos, heading, foundPos) v NoWordBetween(，, Punc, foundPos, pos) v TmpSymptom2(word, nature, pos, sentencePos, heading)
+判断WordNo是否为真,存在“；”为症状: !TmpSymptom3(word, nature, pos, sentencePos, heading, foundPos) v NoWordBetween(；, Punc, foundPos, pos) v TmpSymptom2(word, nature, pos, sentencePos, heading)
+
+
+找寻症状所在段落heading: !TmpSymptom(word, nature, pos, sentencePos,heading) v !FindFirstBefore(pos, IN_SENTENCE, null, Heading, null, null, foundPos, foundWord, foundNature) v TmpSymptom2(word, nature, pos, sentencePos, foundWord)
+
+//需要的症状原子 
+去掉为伴随症状的症状: !TmpSymptom2(word, nature, pos, sentencePos, heading) v FindFirstBefore(pos, IN_SENTENCE, 伴, null, null, null, foundPos, foundWord, foundNature)v FindFirstBefore(pos, IN_SENTENCE, 伴有, null, null, null, foundPos, foundWord, foundNature) v FindFirstBefore(pos, IN_SENTENCE, 伴随, null, null, null, foundPos, foundWord, foundNature) v ReSymptom(word, nature, pos, sentencePos, heading)
+
+
+

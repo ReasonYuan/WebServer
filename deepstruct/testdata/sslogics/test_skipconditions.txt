@@ -1,0 +1,1 @@
+exists nature(POS_DRUG:用药).skip(*|!nature=否定词).word(POS_EFFECTS1:好转) => evidence(HaveDrugGoodEffects/POS_DRUG/POS_EFFECTS1/null/null).tag(用药效果7)

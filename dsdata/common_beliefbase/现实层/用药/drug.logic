@@ -1,0 +1,46 @@
+
+标记用药所属日期: !BriefWord(word1, nature1, pos1) v !Equals(nature1, Drug) v !FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v TagDate(pos1, word1, foundPos, foundWord, foundNature, nature1)
+
+标记无日期的用药: !BriefWordAndHeading(word1, nature1, pos1, heading) v !Equals(nature1, Drug) v FindFirstBefore(pos1, IN_SECTION, null, Date, null, null, foundPos, foundWord, foundNature) v NoTimeTagDate(pos1, word1, null, null, null, nature1, heading)
+
+
+剂量或者频次在前的用药: !DrugVVn(word1, word2,nature1, pos1,nature2, pos2, sentencePos1) v !IsDrug(word, nature, pos, sentencePos, heading) v !Express(pos-pos2=1) v !Equals(heading,history_of_present_illness) v TmpDrug(word,nature, pos, heading ,word1, word2,null,null,nature1, pos1, nature2, pos2, null, null, null, null)     
+
+剂量或者频次在前的用药前面无第字: !TmpDrug(word,nature, pos, heading ,word1, word2,null,null,nature1, pos1, nature2, pos2, null, null, null, null) v FindAround(pos1, -1, 第, null, null, null, foundPos, foundWord, foundNature) v @AllRightDrug(word,nature, pos, heading ,word1, word2,null,null,nature1, pos1, nature2, pos2, null, null, null, null) 
+
+有剂量无频次的用药: !IsDrug(word, nature, pos, sentencePos, heading) v !DrugVVn(word1, word2,nature1, pos1,nature2, pos2, sentencePos1) v !AfterWithin(pos, pos1, 1) v !Equals(heading,history_of_present_illness) v @AllRightDrug(word,nature, pos, heading ,word1, word2,null,null,nature1, pos1, nature2, pos2, null, null, null, null)
+
+有剂量有频次的用药: !IsDrug(word, nature, pos, sentencePos, heading) v !DoubleVVn(word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4) v !AfterWithin(pos, pos1, 2) v !Equals(heading,history_of_present_illness) v RightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4)
+
+无剂量频次的用药: !IsDrug(word, nature, pos, sentencePos, heading) v !Equals(heading, history_of_present_illness) v @AllRightDrug(word, nature ,pos, heading ,null, null, null, null,null, null, null, null, null, null, null, null)
+
+
+有剂量频次的用药2: !RightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4) v @AllRightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4)
+
+
+
+#暂停使用药: !AllRightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4) v !FindAround(pos,~-2,暂停, null, null, null, foundPos, foundWord, foundNature) v StopFinallDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord)
+
+#暂停使用药: !AllRightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4) v ! FindAround(pos,~-2,停止, null, null, null, foundPos, foundWord, foundNature) v StopFinallDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord)
+
+
+#非暂停使用药: !AllRightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4) v FindAround(pos, ~-2,暂停, null, null, null, foundPos, foundWord, foundNature)v FindAround(pos, ~-2,停止, null, null, null, foundPos, foundWord, foundNature) v UseFinallDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4,null)
+
+
+
+暂停使用药:  !AllRightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4) v !FindFirstBefore(pos, IN_SENTENCE, 暂停, null, null, null, foundPos, foundWord, foundNature) v tmpStopDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord,foundPos)
+
+暂停使用药:  !AllRightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4) v !FindFirstBefore(pos, IN_SENTENCE, 停止, null, null, null, foundPos, foundWord, foundNature) v tmpStopDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord,foundPos)   
+
+暂停使用药: !tmpStopDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord,foundPos) v !NoWordBetween(，, null, foundPos, pos) v !NoWordBetween(；, null, foundPos, pos) v testStopDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord, foundPos)
+
+非暂停使用药: !tmpStopDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord,foundPos) v NoWordBetween(，, null, foundPos, pos) v UseFinallDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, null , null)
+
+非暂停使用药: !tmpStopDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord,foundPos) v NoWordBetween(；, null, foundPos, pos) v UseFinallDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, null , null)
+
+最终暂停使用药: !testStopDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord, foundPos) v !NoWordBetween(，, null, foundPos,pos) v StopFinallDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, foundWord, foundPos)
+
+非暂停使用药:  !AllRightDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4) v FindFirstBefore(pos, IN_SENTENCE, 暂停, null, null, null, foundPos, foundWord, foundNature) v FindFirstBefore(pos, IN_SENTENCE, 停止, null, null, null, foundPos, foundWord, foundNature) v tmpFinalDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, null ,null)
+
+非暂停使用药: !tmpFinalDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, null ,null) v UseFinallDrug(word,nature, pos, heading ,word1, word2,word3,word4,nature1, pos1,nature2, pos2,nature3, pos3,nature4, pos4, null ,null)
+

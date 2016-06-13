@@ -1,0 +1,2 @@
+#检查项+部位合并
+exists nature(X:检查项).word(Y:\().nature(Z:部位).word(F:\)) => combine(X+Y+Z+F=检查项).tag(tag14_1)
